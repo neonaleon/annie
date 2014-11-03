@@ -23,10 +23,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//app.use(express.static(path.join(__dirname, 'sdk'))); // SDK
-app.get('/sdk/browser/annie.js', function(req, res){
-  res.sendFile(path.join(__dirname, 'sdk/browser/annie.js'));
-});
+app.use('/sdk', express.static(path.join(__dirname, 'sdk'))); // SDK
 
 app.use('/', require('./routes/index'));
 app.use('/applications', require('./routes/applications'));
