@@ -14,6 +14,7 @@ describe('NodeJS SDK for Track API', function(){
 
   // before each test, clear db, or insert fake data
   beforeEach(function(done){
+    // done();
     EventModel.remove({}, done);
     // same as
     // EventModel.remove({}, function(err){
@@ -23,9 +24,18 @@ describe('NodeJS SDK for Track API', function(){
     // });
   });
 
-  it('should track a Test event', function(){
+  it('should track a Test event', function(done){
     annie.track('Test', {
       'sdk': 'node'
+    })
+    .then(function(res){
+      EventModel.find({ event: 'Test', data: { 'sdk': 'node' } }, function(err, doc){
+        expect(doc).to.not.be.null;
+        done(err);
+      });
+    })
+    .catch(function(err){
+      done(err);
     });
   });
 

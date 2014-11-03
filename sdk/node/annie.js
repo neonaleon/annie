@@ -1,4 +1,5 @@
 var request = require('superagent');
+var RSVP = require('rsvp');
 
 var annie = {
   options: {
@@ -28,20 +29,20 @@ var annie = {
   },
 
   track: function(event, data){
-    request
-      .post(this.options.host + '/api/track')
-      .send({
-        event: event,
-        data: data,
-        timestamp: new Date()
-      })
-      .end(function(err, res){
-        if (res.error){
-
-        } else {
-
-        }
-      });
+    var host = this.options.host;
+    return new RSVP.Promise(function(resolve, reject){
+      request
+        .post(host + '/api/track')
+        .send({
+          event: event,
+          data: data,
+          timestamp: new Date()
+        })
+        .end(function(err, res){
+          resolve(res);
+          reject(err);
+        });
+    });
   },
 
   identify: function(uid, data){
