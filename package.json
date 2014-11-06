@@ -18,6 +18,8 @@
     "nconf": "^0.6.9",
     "rsvp": "^3.0.14",
     "serve-favicon": "~2.0.1",
+    "showdown": "^0.3.1",
+    "sprintf-js": "^1.0.2",
     "superagent": "^0.20.0"
   },
   "devDependencies": {
