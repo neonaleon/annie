@@ -2,7 +2,7 @@
 
 class Annie {
 
-  private static $url = 'http://10.25.11.45:3000/api';
+  private static $url = 'http://10.25.11.45:8000/api';
   private static $apiKey = '';
 
   public static function init($apiKey){
@@ -26,7 +26,7 @@ class Annie {
         'method' => 'POST',
         'header' => 'Content-Type: application/json',
         'content' => $outbound
-    )
+      )
     ));
 
     $result = file_get_contents($endpoint, false, $context);
@@ -34,6 +34,7 @@ class Annie {
     // TODO: add a callback or something
     // might need to make a queue and run a background task, since if the page
     // changes, the requests get cancelled?
+    // API might timeout too...
   }
 
   public static function identify($user, $data){

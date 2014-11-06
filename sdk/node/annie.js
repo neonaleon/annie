@@ -4,7 +4,7 @@ var RSVP = require('rsvp');
 var annie = {
   options: {
     apiKey: '',
-    host: 'http://10.25.11.45:3000'
+    host: 'http://10.25.11.45:8000'
   },
 
   init: function(){
