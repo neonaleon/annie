@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-md-2 dashboard-sidebar">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="well">
+          <ul class="nav nav-sidebar">
+            <li>
+              <strong>Metrics</strong>
+              <ul>
+                {{#each metrics}}
+                <li>{{name}}</li>
+                {{/each}}
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li>
+              <strong>Events</strong>
+              <ul>
+                {{#each events}}
+                <li>{{name}}</li>
+                {{/each}}
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-10 dashboard-content">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="well">
+          <h1>{{appName}} <small>{{_id}}</small> <a href="applications/{{_id}}/metric/add" class="btn btn-primary btn-fab btn-raised mdi-content-add"></a></h1>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      {{#each metrics}}
+        {{> metric}}
+      {{/each}}
+    </div>
+  </div>
+</div>

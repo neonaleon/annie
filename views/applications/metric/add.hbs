@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col-md-6">
+    <h1>Add New Metric</h1>
+    <form method="POST" role="form">
+      <div class="form-group">
+        <input class="form-control floating-label" name="name" type="text" placeholder="Name">
+      </div>
+      <div class="form-group">
+        <textarea class="form-control floating-label" name="expression" placeholder="Expression" rows="10"></textarea>
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control floating-label" name="metricType" placeholder="Metric type">
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control floating-label" name="format" placeholder="Output format">
+      </div>
+      <input type="submit" class="btn btn-raised btn-primary" value="Submit">
+    </form>
+  </div>
+   <div class="col-md-6">
+    <div class="well">
+      {{{format-markdown expressionHelp}}}
+    </div>
+  </div>
+</div>

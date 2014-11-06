@@ -1,8 +1,23 @@
-<h1>Your Applications</h1>
+<div class="row">
+  <div class="col-md-12">
+    <h1 style="display: inline-block">Your Applications</h1>
+    <a href="/applications/add" class="btn btn-primary btn-fab mdi-content-add"></a>
+  </div>
+</div>
 {{#each apps}}
-<div>
-  <p>appName: {{appName}}</p>
-  <p>apiKey: {{apiKey}}</p>
-  <p>domains: {{domains}}</p>
+<div class="row">
+  <div class="col-md-12">
+    <div class="well">
+      <label for="">Application Name</label>
+      <p>{{appName}}<small>{{_id}}</small></p>
+      <label for="">API Key</label>
+      <p>{{apiKey}}</p>
+      <label for="">Domains</label>
+      <p>{{domains}}</p>
+      <a href="/applications/{{_id}}/edit" class="btn btn-default">Edit</a>
+      <a href="/applications/{{_id}}/dashboard" class="btn btn-primary">Dashboard</a>
+    </div>
+  </div>
 </div>
 {{/each}}
+<script src="/sdk/browser/annie.min.js"></script>
