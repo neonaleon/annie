@@ -18,14 +18,8 @@ ApplicationModel.find({}).exec(function(err, apps){
         }
         metric.set('value', value, String);
         // save changes to the app after metric is updated
-        counter += 1;
         app.save(function(err, app, n){
           if (err) console.log(err);
-          counter -= 1;
-          if ( counter === 0 ) {
-            console.log('Script completed!');
-            process.exit();
-          }
         });
       });
     });
