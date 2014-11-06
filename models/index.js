@@ -18,5 +18,6 @@ db.once('open', function callback(){
 
 module.exports = {
   ApplicationModel: require('./application'),
-  EventModel: require('./event')
-}
+  EventModel: require('./event'),
+  MetricModel: require('./metric')
+};
