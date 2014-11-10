@@ -1,6 +1,19 @@
 var RSVP = require('rsvp');
+var moment = require('moment');;
+var reltime = require('reltime');
 var config = require('../../config');
 var EventModel = require('../../models/event');
+
+var parseDate = function(dateString){
+  var date = moment().format(dateString);
+  if (!date.isValid) {
+    date = reltime.parse(date, dateString);
+    if (!date.isValid) {
+      // date syntax error
+    }
+  }
+  return date;
+}
 
 var Query = {
   event: function(name){
@@ -12,12 +25,12 @@ var Query = {
     this.model.where(obj);
     return this;
   },
-  from: function(time){
-    this.model.where({timestamp: { $gte: time }});
+  from: function(dateString){
+    this.model.where({timestamp: { $gte: parseDate(dateString) }});
     return this;
   },
-  to: function(time){
-    this.model.where({timestamp: { $lte: time }});
+  to: function(dateString){
+    this.model.where({timestamp: { $lte: parseDate(dateString) }});
     return this;
   },
   count: function(){

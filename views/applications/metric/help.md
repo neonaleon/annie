@@ -20,7 +20,7 @@ Ends an expression giving a numeric value.
 
 Specify a condition for matching.
 
-`event('Bought gacha').where({ 'data.price': { $gte: 300 } }).value()`
+`event('Bought gacha').where({ 'data.price': 300 }).count().value()`
 
 #### count()
 
@@ -30,11 +30,15 @@ Counts the number of documents that match the query.
 
 #### from()
 
-_NYI_
+Number of signups in the last week. You can use d, m, s for days, minutes, seconds.
+
+`event('signup').from('-7d').count().value()`
 
 #### to()
 
-_NYI_
+You can chain `from` and `to` methods to form date range queries.
+
+`event('bought event gacha').where({ 'data.gacha': 'event gacha' }).from('04-10-2014 08:00:00').to('11-10-2014 15:00:00').count().value()`
 
 ## Examples
 
