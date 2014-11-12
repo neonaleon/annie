@@ -5,19 +5,6 @@ She provides SDKs for client applications to use her, or simply interact with he
 Different games will have different metrics to care about, and Annie provides a scripting system for game teams to make sense of the data tracked through
 Annie.
 
-## Installation
-
-```
-git clone <url here>
-cd annie
-npm install
-```
-
-## Deploy
-```
-forever start <node app here>
-```
-
 ## API
 
 ### Track
@@ -51,3 +38,25 @@ annie.track('Bought Gacha', {
 ```
 
 ## Development
+
+### Installation
+
+#### Dependencies
+
+node, npm, mongodb
+
+```
+git clone <url here>
+cd annie
+npm install
+```
+
+#### Test
+
+`npm test`
+
+#### Run
+
+`NODE_ENV=production ./bin/www`
+
+Navigate to http://localhost:8000
