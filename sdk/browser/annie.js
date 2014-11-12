@@ -3000,6 +3000,7 @@ var annie = {
   },
 
   track: function(event, data){
+    data = data || {};
     var host = this.options.host;
     return new RSVP.Promise(function(resolve, reject){
       request
