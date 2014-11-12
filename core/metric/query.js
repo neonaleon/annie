@@ -7,7 +7,7 @@ var EventModel = require('../../models/event');
 var parseDate = function(dateString){
   var date = moment().format(dateString);
   if (!date.isValid) {
-    date = reltime.parse(date, dateString);
+    date = reltime.parse(new Date(), dateString);
     if (!date.isValid) {
       // date syntax error
     }
@@ -26,11 +26,11 @@ var Query = {
     return this;
   },
   from: function(dateString){
-    this.model.where({timestamp: { $gte: parseDate(dateString) }});
+    this.model.where({ timestamp: { $gte: parseDate(dateString) }});
     return this;
   },
   to: function(dateString){
-    this.model.where({timestamp: { $lte: parseDate(dateString) }});
+    this.model.where({ timestamp: { $lte: parseDate(dateString) }});
     return this;
   },
   count: function(){
