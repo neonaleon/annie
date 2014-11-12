@@ -40,6 +40,7 @@ router.post('/add', function(req, res){
 
 router.get('/:appId/edit', function(req, res){
   ApplicationModel.findOne({ _id: req.params.appId }).exec(function(err, app){
+    app.title = app.title || 'Edit';
     res.render('applications/edit', app);
   });
 });
@@ -58,19 +59,20 @@ router.post('/:appId/edit', function(req, res){
   }
   ApplicationModel.update({ _id: req.params.appId }, updateFields)
   .exec(function(err, app){
-    console.log(err, app);
     res.redirect('/applications');
   });
 });
 
 router.get('/:appId/dashboard', function(req, res){
   ApplicationModel.findOne({ _id: req.params.appId }).exec(function(err, doc){
+    doc.title = doc.title || 'Dashboard';
     res.render('applications/dashboard', doc);
   });
 });
 
 router.get('/:appId/metric/add', function(req, res){
   res.render('applications/metric/add', {
+    title: 'Add Metric',
     expressionHelp: fs.readFileSync( 'views/applications/metric/help.md', { encoding: 'utf8' })
   });
 });

@@ -15,6 +15,7 @@ app.disable('x-powered-by');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+hbs.registerHelper('if-column-index', require('./views/helpers/if-column-index'));
 hbs.registerHelper('format-markdown', require('./views/helpers/format-markdown'));
 hbs.registerPartials(__dirname + '/views/partials');
 

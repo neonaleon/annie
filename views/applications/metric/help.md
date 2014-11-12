@@ -28,11 +28,17 @@ Counts the number of documents that match the query.
 
 `event('Survey').where({ 'data.nodejs': 'rocks' }).count().value()`
 
-#### from()
+#### from('DD-MM-YYYY HH:mm:ss' or '-Nd -Nm -Ns')
 
-Number of signups in the last week. You can use d, m, s for days, minutes, seconds.
+You can use a date or d, m, s for days, minutes, seconds.
+
+e.g Number of signups in the last week. 
 
 `event('signup').from('-7d').count().value()`
+
+e.g. Number of signups from some date.
+
+`event('signup').from('30-11-2013').count().value()`
 
 #### to()
 
