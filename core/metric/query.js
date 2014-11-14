@@ -36,12 +36,17 @@ var Query = {
   },
   count: function(){
     this._count = true;
-    this._internal.group({ _id: null, count: { $sum: 1 } });
+    this._internal.group({ _id: null, value: { $sum: 1 } });
     return this;
   },
   sum: function(field){
     this._sum = true;
-    this._internal.group({ _id: null, sum: { $sum: '$' + field } });
+    this._internal.group({ _id: null, value: { $sum: '$' + field } });
+    return this;
+  },
+  average: function(field){
+    this._average = true;
+    this._internal.group({ _id: null, value: { $avg: '$' + field } });
     return this;
   },
   value: function(){
@@ -52,10 +57,8 @@ var Query = {
           console.log(err);
           reject(err);
         } else {
-          if ( query._count ){
-            resolve(docs[0].count);
-          } else if ( query._sum ){
-            resolve(docs[0].sum);
+          if (query._sum || query._count || query._average){
+            resolve(docs[0].value);
           }
           resolve(docs);
         }
