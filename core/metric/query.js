@@ -18,40 +18,50 @@ var parseDate = function(dateString){
 var Query = {
   event: function(name){
     var query = Object.create(Query);
-    query.model = EventModel.where({ event: name });
+    query._internal = EventModel.aggregate();
+    query._internal.match({ event: name });
     return query;
   },
   where: function(obj){
-    this.model.where(obj);
+    this._internal.match(obj);
     return this;
   },
   from: function(dateString){
-    this.model.where({ timestamp: { $gte: parseDate(dateString) }});
+    this._internal.match({ timestamp: { $gte: parseDate(dateString) }});
     return this;
   },
   to: function(dateString){
-    this.model.where({ timestamp: { $lte: parseDate(dateString) }});
+    this._internal.match({ timestamp: { $lte: parseDate(dateString) }});
     return this;
   },
   count: function(){
     this._count = true;
+    this._internal.group({ _id: null, count: { $sum: 1 } });
+    return this;
+  },
+  sum: function(field){
+    this._sum = true;
+    this._internal.group({ _id: null, sum: { $sum: '$' + field } });
     return this;
   },
   value: function(){
     var query = this;
     return new RSVP.Promise(function(resolve, reject){
-      if ( query._count ) {
-        query.model.count(function(err, count){
-          resolve(count);
+      query._internal.exec(function(err, docs){
+        if (err){
+          console.log(err);
           reject(err);
-        });
-      } else {
-        query.model.exec(function(err, docs){
+        } else {
+          if ( query._count ){
+            resolve(docs[0].count);
+          } else if ( query._sum ){
+            resolve(docs[0].sum);
+          }
           resolve(docs);
-          reject(err);
-        });
-      }
+        }
+      });
     });
+
   }
 }
 
