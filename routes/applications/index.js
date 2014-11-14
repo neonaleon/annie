@@ -2,8 +2,9 @@ var express = require('express');
 var router = express.Router();
 var crypto = require('crypto');
 var fs = require('fs');
+var path = require('path');
 
-var models = require('../models');
+var models = require('../../models');
 var ApplicationModel = models.ApplicationModel;
 var MetricModel = models.MetricModel;
 var EventModel = models.EventModel;
@@ -11,6 +12,7 @@ var EventModel = models.EventModel;
 router.get('/', function(req, res){
   ApplicationModel.find({}).exec(function(err, apps){
     res.render('applications/index', {
+      'title': 'Applications',
       'apps': apps
     });
   })
@@ -32,8 +34,7 @@ router.post('/add', function(req, res){
   })
   .then(function(app){
     res.redirect('/applications');
-  })
-  .catch(function(err){
+  }, function(err){
     throw err;
   });
 });
@@ -73,7 +74,7 @@ router.get('/:appId/dashboard', function(req, res){
 router.get('/:appId/metric/add', function(req, res){
   res.render('applications/metric/add', {
     title: 'Add Metric',
-    expressionHelp: fs.readFileSync( 'views/applications/metric/help.md', { encoding: 'utf8' })
+    expressionHelp: fs.readFileSync(path.join(__dirname, '../../views/applications/metric/help.md'), { encoding: 'utf8' })
   });
 });
 
