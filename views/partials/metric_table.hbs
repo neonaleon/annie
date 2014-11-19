@@ -1,0 +1,23 @@
+<h1>{{name}}</h1>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+    {{#with value}}
+      {{#each labels}}
+        <th>{{this}}</th>
+      {{/each}}
+    {{/with}}
+    </tr>
+  </thead>
+  <tbody>
+    {{#with value}}
+      {{#each data}}
+        <tr>
+          {{#each this}}
+          <td>{{this}}</td>
+          {{/each}}
+        </tr>
+      {{/each}}
+    {{/with}}
+  </tbody>
+</table>
