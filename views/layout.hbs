@@ -31,5 +31,69 @@
       $.material.init();
     });
   </script>
+
+  <script src="js/Chart.js"></script>
+  <script>
+    $(document).ready(function(){
+      Chart.defaults.global.maintainAspectRatio = false;
+      Chart.defaults.global.responsive = true;
+      Chart.defaults.global.animation = false;
+
+      var drawCharts = function(){
+        $('.metric-flot:visible').each(function(i, e){
+          var data = JSON.parse($(e).find('.metric-data').html());
+          var metricType = $(e).data('metric-type');
+          var options = {
+            bezierCurve: false,
+            datasetFill: false
+          };
+
+          var canvas = $(e).find('canvas');
+          var width = canvas.parent().width();
+          canvas.attr('width', width);
+          var ctx = canvas.get(0).getContext('2d');
+          switch (metricType) {
+            case 'line':
+              new Chart(ctx).Line({
+                labels: data.labels,
+                datasets: [
+                  {
+                    pointColor: '#4285f4',
+                    data: data.data
+                  }
+                ]
+              }, options);
+              break;
+            case 'bar':
+              new Chart(ctx).Bar({
+                labels: data.labels,
+                datasets: [
+                  {
+                    pointColor: '#4285f4',
+                    data: data.data
+                  }
+                ]
+              }, options);
+              break;
+            case 'pie':
+              // use circumference to compute %
+              options.tooltipTemplate = '<%if (label){%><%=label%>: <%}%><%= circumference / (Math.PI * 2) * 100 %>%';
+              var colors = [ '#5B90BF', '#96b5b4', '#a3be8c', '#ab7967', '#d08770', '#b48ead' ];
+              data.forEach(function(datum, i){
+                datum.color = colors[i % colors.length];
+              });
+              var pieChart = new Chart(ctx).Pie(data, options);
+              // var img = $('<img>');
+              // img.attr('src', pieChart.toBase64Image());
+              // canvas.after(img);
+              var legend = $(pieChart.generateLegend());
+              $(e).find('.legend').append(legend);
+              break;
+          }
+        });
+      }
+      drawCharts();
+    });
+  </script>
   </body>
 </html>

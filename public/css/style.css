@@ -1,3 +1,81 @@
+canvas {
+  min-height: 300px !important;
+}
+
+.pie-legend {
+  padding-left: 0px !important;
+}
+
+.pie-legend li {
+  display: block;
+  padding-left: 30px;
+  position: relative;
+  margin-bottom: 4px;
+  border-radius: 5px;
+  padding: 2px 8px 2px 28px;
+  font-size: 14px;
+  cursor: default;
+  -webkit-transition: background-color 200ms ease-in-out;
+  -moz-transition: background-color 200ms ease-in-out;
+  -o-transition: background-color 200ms ease-in-out;
+  transition: background-color 200ms ease-in-out;
+}
+
+.pie-legend li span {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 100%;
+  border-radius: 5px;
+}
+
+.row-no-padding {
+  margin-left: 0;
+  margin-right: 0;
+  [class*="col-"] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
 .dashboard-sidebar ul {
   list-style: none;
+}
+
+.columns {
+  -webkit-column-count: 2;
+     -moz-column-count: 2;
+          column-count: 2;
+   -moz-column-fill: auto;
+        column-fill: auto;
+ -webkit-column-gap: 10px;
+    -moz-column-gap: 10px;
+         column-gap: 15px;
+}
+
+@media (min-width: 960px) {
+  .columns {
+    -webkit-column-count: 4;
+       -moz-column-count: 4;
+            column-count: 4;
+  }
+}
+
+@media (min-width: 1100px) {
+  .columns {
+    -webkit-column-count: 4;
+       -moz-column-count: 4;
+            column-count: 4;
+  }
+}
+
+.columns * {
+   margin: 0 2px 15px;
+  -webkit-column-break-inside: avoid;
+  -moz-column-break-inside: avoid;
+  column-break-inside: avoid;
+  padding: 15px;
+  padding-bottom: 5px;
 }

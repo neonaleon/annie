@@ -11,6 +11,7 @@ module.exports = function(){
       break;
     case 'line_chart':
     case 'pie_chart':
+    case 'bar_chart':
       if (typeof this.value === 'object') {
         this.value = JSON.stringify(this.value);
       }

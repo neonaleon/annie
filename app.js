@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var hbs = require('hbs');
+var hbsutils = require('hbs-utils')(hbs);
 
 var config = require('./config'); // load app configs
 var app = express();
@@ -17,7 +18,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 hbs.registerHelper('if-column-index', require('./views/helpers/if-column-index'));
 hbs.registerHelper('format-markdown', require('./views/helpers/format-markdown'));
-hbs.registerPartials(__dirname + '/views/partials');
+hbs.registerHelper('render-metric-partial', require('./views/helpers/render-metric-partial'));
+// hbs.registerPartials(__dirname + '/views/partials');
+hbsutils.registerWatchedPartials(__dirname + '/views/partials');
 
 // uncomment after placing your favicon in /public
 app.use(favicon(__dirname + '/public/favicon.ico'));

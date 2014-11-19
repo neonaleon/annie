@@ -16,7 +16,8 @@ module.exports = function(grunt){
     uglify: {
       build: {
         files: {
-          'sdk/browser/annie.min.js': 'sdk/browser/annie.js'
+          'sdk/browser/annie.min.js': 'sdk/browser/annie.js',
+          '.tmp/Chart.min.js': 'lib/Chart.js/Chart.js'
         }
       }
     },
@@ -26,8 +27,8 @@ module.exports = function(grunt){
         files: [
           {
             expand: true,
-            cwd: 'lib/Chart.js',
-            src: ['Chart.min.js'],
+            cwd: 'lib/Chart.js/',
+            src: ['Chart.js', 'Chart.min.js'],
             dest: 'public/js/'
           }
         ]
