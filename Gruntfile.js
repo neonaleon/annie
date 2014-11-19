@@ -21,6 +21,19 @@ module.exports = function(grunt){
       }
     },
 
+    copy: {
+      build: {
+        files: [
+          {
+            expand: true,
+            cwd: 'lib/Chart.js',
+            src: ['Chart.min.js'],
+            dest: 'public/js/'
+          }
+        ]
+      }
+    },
+
     watch: {
 
     }
@@ -28,5 +41,5 @@ module.exports = function(grunt){
   });
 
   grunt.registerTask('default', []);
-  grunt.registerTask('build', ['shell:browserify', 'uglify:build']);
+  grunt.registerTask('build', ['shell:browserify', 'uglify:build', 'copy:build']);
 }
