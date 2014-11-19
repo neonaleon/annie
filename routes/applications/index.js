@@ -85,7 +85,8 @@ router.post('/:appId/metric/add', function(req, res){
     expression: req.body.expression,
     settings: {
       metricType: req.body.metricType,
-      format: req.body.format
+      format: req.body.format,
+      labels: req.body.labels.split(/\s*,\s*/)
     }
   });
   // Add the metric to the model
