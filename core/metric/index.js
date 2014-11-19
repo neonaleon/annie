@@ -30,7 +30,11 @@ var compute = function(expression){
     // search for event('event name').<chained operators>.value() pairs
     var begin = expression.indexOf('event');
     if (begin === -1) break;
-    var end = expression.indexOf('value()') + 7;
+    if (expression.indexOf('table(') !== -1){
+      var end = expression.indexOf(')', expression.indexOf('table(')) + 1;
+    } else {
+      var end = expression.indexOf('value()') + 7;
+    }
     // extract the expression
     var subExpression = expression.substring(begin, end);
     // shift the search index
@@ -51,7 +55,8 @@ var compute = function(expression){
       .then(function(results){
         // substitute the results into the symbols
         Object.keys(promises).forEach(function(symbol){
-          copy = copy.replace(symbol, results[symbol]);
+          // string subsitution, object results must be stringified
+          copy = copy.replace(symbol, JSON.stringify(results[symbol]));
         });
         // resolve this promise with the final value
         resolve(eval(copy));
