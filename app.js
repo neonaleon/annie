@@ -34,6 +34,7 @@ app.use('/sdk', express.static(path.join(__dirname, 'sdk'))); // SDK
 
 app.use('/', require('./routes/index'));
 app.use('/applications', require('./routes/applications'));
+app.use('/developer', require('./routes/developer'));
 app.use('/api', require('./routes/api'));
 
 // catch 404 and forward to error handler
