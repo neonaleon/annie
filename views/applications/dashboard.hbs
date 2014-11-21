@@ -1,73 +1,11 @@
+<h1>{{appName}} <small>{{_id}}</small> <a href="applications/{{_id}}/metric/add" class="btn btn-primary mdi-content-add"></a></h1>
+<a href="" class="btn btn-default btn-raised">View Events</a>
 <div class="row">
-  <div class="col-md-12 dashboard-content">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="well">
-          <h1>{{appName}} <small>{{_id}}</small> <a href="applications/{{_id}}/metric/add" class="btn btn-primary mdi-content-add"></a></h1>
-          <a href="" class="btn btn-default btn-raised">View Events</a>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="visible-xs-block visible-sm-block">
-        <div class="col-xs-6 col-sm-6">
-          <div class="container-fluid">
-            <div class="row">
-              {{#each metrics}}
-                {{#if-column-index 2 @index 0}}
-                  {{{render-metric-partial}}}
-                {{/if-column-index}}
-              {{/each}}
-            </div>
-          </div>
-        </div>
-        <div class="col-xs-6 col-sm-6">
-          <div class="container-fluid">
-            <div class="row">
-              {{#each metrics}}
-                {{#if-column-index 2 @index 1}}
-                  {{{render-metric-partial}}}
-                {{/if-column-index}}
-              {{/each}}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="visible-md-block visible-lg-block">
-        <div class="col-md-4 col-lg-4">
-          <div class="container-fluid">
-            <div class="row">
-              {{#each metrics}}
-                {{#if-column-index 3 @index 0}}
-                  {{{render-metric-partial}}}
-                {{/if-column-index}}
-              {{/each}}
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-lg-4">
-          <div class="container-fluid">
-            <div class="row">
-              {{#each metrics}}
-                {{#if-column-index 3 @index 1}}
-                  {{{render-metric-partial}}}
-                {{/if-column-index}}
-              {{/each}}
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-lg-4">
-          <div class="container-fluid">
-            <div class="row">
-              {{#each metrics}}
-                {{#if-column-index 3 @index 2}}
-                  {{{render-metric-partial}}}
-                {{/if-column-index}}
-              {{/each}}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="gridster">
+    <ul>
+    {{#each metrics}}
+      {{{render-metric-partial}}}
+    {{/each}}
+    </ul>
   </div>
 </div>

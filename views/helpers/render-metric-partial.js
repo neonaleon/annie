@@ -18,7 +18,6 @@ module.exports = function(){
       break;
   }
   source = fs.readFileSync(path.join(__dirname, '../partials/metric_' + this.settings.metricType + '.hbs'), { encoding: 'utf8' });
-  source = '<div class="well metric-item" data-metric-id="{{_id}}">' + source + '</div>';
   var template = hbs.handlebars.compile(source);
   return template(this);
 }

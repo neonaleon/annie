@@ -5,7 +5,8 @@
   <base href="http://10.25.11.45:8000">
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
   <link href="css/ripples.min.css" rel="stylesheet">
-  <link href="css/material-wfont.min.css" rel="stylesheet">
+  <link href="css/material-wfont.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/jquery.gridster.min.css">
   <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
@@ -26,21 +27,49 @@
 
   <script src="js/ripples.min.js"></script>
   <script src="js/material.min.js"></script>
+  <script src="js/jquery.gridster.with-extras.min.js"></script>
+  <script src="js/Chart.js"></script>
+
   <script>
     $(document).ready(function() {
       $.material.init();
     });
-  </script>
 
-  <script src="js/Chart.js"></script>
-  <script>
+    var gridster;
+    $(document).ready(function(){
+      gridster = $(".gridster > ul").gridster({
+        // widget_margins: [10, 10],
+        // widget_base_dimensions: [400, 140],
+        max_cols: 3,
+        resize: {
+          enabled: false,
+          // max_size: [3, 3],
+          // min_size: [1, 1],
+          resize: function(e, ui, $widget){
+            $widget.find('.metric-flot').data('chart').resize();
+          }
+        },
+        draggable: {
+          start: function(e, ui){
+            $(ui.$player[0]).addClass('shadow-z-1');
+          }
+        }
+      }).data('gridster');
+    });
+
+    $('.dashboard-item').each(function(i, e){
+      $(e).on('transitionend', function(event){
+        $(e).removeClass('shadow-z-1');
+      })
+    });
+
     $(document).ready(function(){
       Chart.defaults.global.maintainAspectRatio = false;
       Chart.defaults.global.responsive = true;
       Chart.defaults.global.animation = false;
 
       var drawCharts = function(){
-        $('.metric-flot:visible').each(function(i, e){
+        $('.metric-flot').each(function(i, e){
           var data = JSON.parse($(e).find('.metric-data').html());
           var metricType = $(e).data('metric-type');
           var options = {
@@ -52,9 +81,10 @@
           var width = canvas.parent().width();
           canvas.attr('width', width);
           var ctx = canvas.get(0).getContext('2d');
+          var chart;
           switch (metricType) {
             case 'line':
-              new Chart(ctx).Line({
+              chart = new Chart(ctx).Line({
                 labels: data.labels,
                 datasets: [
                   {
@@ -65,7 +95,7 @@
               }, options);
               break;
             case 'bar':
-              new Chart(ctx).Bar({
+              chart = new Chart(ctx).Bar({
                 labels: data.labels,
                 datasets: [
                   {
@@ -82,14 +112,15 @@
               data.forEach(function(datum, i){
                 datum.color = colors[i % colors.length];
               });
-              var pieChart = new Chart(ctx).Pie(data, options);
+              chart = new Chart(ctx).Pie(data, options);
               // var img = $('<img>');
               // img.attr('src', pieChart.toBase64Image());
               // canvas.after(img);
-              var legend = $(pieChart.generateLegend());
+              var legend = $(chart.generateLegend());
               $(e).find('.legend').append(legend);
               break;
           }
+          $(e).data('chart', chart);
         });
       }
       drawCharts();
