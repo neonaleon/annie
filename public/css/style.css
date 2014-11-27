@@ -1,3 +1,78 @@
+#owl-login {
+  position: relative;
+  z-index: 1;
+  background-image: url("../img/head.png");
+  width: 237px;
+  height: 108px;
+}
+
+#owl-login .arms {
+  top: 58px;
+  position: absolute;
+  width: 100%;
+  height: 41px;
+  overflow: hidden;
+}
+
+#owl-login .arm {
+  width: 40px;
+  height: 65px;
+  position: absolute;
+  left: 20px;
+  top: 40px;
+  background-image: url("../img/arm.png");
+  -webkit-transition: 0.3s ease-out;
+  -moz-transition: 0.3s ease-out;
+  -o-transition: 0.3s ease-out;
+  -ms-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
+  -webkit-transform: rotate(-20deg);
+  -moz-transform: rotate(-20deg);
+  -o-transform: rotate(-20deg);
+  -ms-transform: rotate(-20deg);
+  transform: rotate(-20deg);
+}
+#owl-login .arm.arm-r {
+  transform: rotate(20deg) scaleX(-1);
+  left: 154px;
+}
+#owl-login.password .arm {
+  transform: translateY(-40px) translateX(40px);
+}
+#owl-login.password .arm.arm-r {
+  transform: translateY(-40px) translateX(-40px) scaleX(-1);
+}
+
+#owl-login .hand {
+  width: 34px;
+  height: 34px;
+  -webkit-border-radius: 40px;
+  border-radius: 40px;
+  background-color: #472d20;
+  -webkit-transform: scaleY(0.6);
+  -moz-transform: scaleY(0.6);
+  -o-transform: scaleY(0.6);
+  -ms-transform: scaleY(0.6);
+  transform: scaleY(0.6);
+  -webkit-transition: 0.3s ease-out;
+  -moz-transition: 0.3s ease-out;
+  -o-transition: 0.3s ease-out;
+  -ms-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
+  position: absolute;
+  left: 14px;
+  bottom: -8px;
+}
+#owl-login .hand.hand-r {
+  left: 166px;
+}
+#owl-login.password .hand {
+  transform: translateY(-15px) translateX(42px) scale(0.7);
+}
+#owl-login.password .hand.hand-r {
+  transform: translateY(-15px) translateX(-42px) scale(0.7);
+}
+
 .dashboard-item {
   background-color: #FFF;
   padding: 19px;
@@ -7,10 +82,6 @@
 
 .gridster ul {
   list-style: none
-}
-
-canvas {
-  min-height: 300px !important;
 }
 
 .pie-legend {
@@ -49,4 +120,33 @@ canvas {
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
+}
+
+/* extend bootstrap's responsiveness */
+/* http://www.minimit.com/articles/solutions-tutorials/bootstrap-3-responsive-centered-columns */
+
+/* centered columns styles */
+.row-centered {
+    text-align:center;
+}
+.col-centered {
+    display:inline-block;
+    float:none;
+    /* reset the text-align */
+    text-align:left;
+    /* inline-block space fix */
+    margin-right:-4px;
+}
+
+.col-fixed {
+    /* custom width */
+    width:320px;
+}
+.col-min {
+    /* custom min width */
+    min-width:320px;
+}
+.col-max {
+    /* custom max width */
+    max-width:320px;
 }
