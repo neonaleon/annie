@@ -10,8 +10,8 @@
   <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
-    <div class="navbar navbar-default navbar-static-top">
-      <div class="container-fluid">
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div id="toolbar" class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="mdi-navigation-more-vert mdi-material-lightgrey navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
           </button>
@@ -48,6 +48,13 @@
     <script>
       $(document).ready(function() {
         $.material.init();
+      });
+      $(window).scroll(function(){
+        $('#toolbar').addClass('scrolled');
+
+        if ($(this).scrollTop() === 0){
+          $('#toolbar').removeClass('scrolled');
+        }
       });
 
       var dashboardItemClickHandler = function(event){
@@ -160,13 +167,6 @@
       $('#loginPassword').focusout(function(){
         $('#owl-login').removeClass('password');
       });
-      // $('#loginForm').submit(function(){
-      //   var data = {
-      //     email: $('#loginEmail').val(),
-      //     password: $('#loginPassword').val()
-      //   };
-      //   $.post('login', data);
-      // });
     </script>
   </body>
 </html>
