@@ -60,9 +60,13 @@ app.use(function(req, res, next){
 	}
 
 	res.locals.url = req.url;
-	res.locals.host = 'http://kts-leonho/annie/';
+
+	// set to the correct baseUrl when running behind nginx
+	// res.locals.baseUrl = '/';
+	res.locals.baseUrl = '/annie/';
+
 	next();
-})
+});
 
 // unprotected routes
 app.use('/', require('./routes/base'));

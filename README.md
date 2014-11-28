@@ -37,6 +37,20 @@ annie.track('Bought Gacha', {
 ```
 ```
 
+## Deployment
+
+### Nginx
+
+You might need something like this if you use nginx to proxy.
+```
+location /annie/ {
+    rewrite ^/annie/(.*)$ /$1 break;
+    proxy_pass http://your-domain:8000/;
+    proxy_redirect / /annie/;
+    proxy_set_header Host $http_host;
+}
+```
+
 ## Development
 
 ### Installation

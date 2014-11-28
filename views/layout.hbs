@@ -2,7 +2,7 @@
 <html>
   <head>
   <title>{{title}}</title>
-  <base href="{{host}}">
+  <base href="{{baseUrl}}">
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
   <link href="css/ripples.min.css" rel="stylesheet">
   <link href="css/material-wfont.css" rel="stylesheet">
@@ -82,7 +82,7 @@
           },
           draggable: {
             start: function(e, ui){
-              $(ui.$player[0]).addClass('shadow-z-1');
+              $(ui.$player[0]).addClass('shadow-z-2');
             }
           }
         }).data('gridster');

@@ -22,13 +22,13 @@ router.post('/login',
     failureRedirect: 'login'
   }),
   function(req, res){
-    res.redirect('applications');
+    res.redirect('/applications');
   }
 );
 
 router.get('/logout', function(req, res){
   req.logout();
-  res.redirect('login');
+  res.redirect('/login');
 });
 
 router.get('/signup', function(req, res){
@@ -45,7 +45,7 @@ router.post('/signup', function(req, res){
     password: password
   })
   .then(function(user){
-    res.redirect('applications');
+    res.redirect('/applications');
   })
 });
 
