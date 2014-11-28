@@ -5,17 +5,22 @@ var fs = require('fs');
 var path = require('path');
 
 var models = require('../../models');
+var UserModel = models.UserModel;
 var ApplicationModel = models.ApplicationModel;
 var MetricModel = models.MetricModel;
 var EventModel = models.EventModel;
 
 router.get('/', function(req, res){
-  ApplicationModel.find({}).exec(function(err, apps){
-    res.render('applications/index', {
-      'title': 'Applications',
-      'apps': apps
+  UserModel
+    .findOne({ _id: req.user })
+    .populate('applications')
+    .exec(function(err, user){
+      console.log(user.applications);
+      res.render('applications/index', {
+        'title': 'Applications',
+        'apps': user.applications
+      });
     });
-  })
 });
 
 router.get('/add', function(req, res){
@@ -23,20 +28,28 @@ router.get('/add', function(req, res){
 });
 
 router.post('/add', function(req, res){
-  console.log(req.body);
-  var hmac = crypto.createHmac('sha1', 'some random key 2');
-  hmac.update(req.body.domain);
-  var hash = hmac.digest('base64');
+  var app = new ApplicationModel({
+
+  });
   ApplicationModel.create({
-    appName: req.body.appName,
-    domains: [req.body.domain],
-    apiKey: hash
+    appName: req.body.appName
   })
   .then(function(app){
-    res.redirect('/applications');
-  }, function(err){
-    throw err;
-  });
+    UserModel
+      .findOne({ _id: req.user })
+      .exec()
+      .then(function(user){
+        user.applications.push(app);
+        user.save(function(err){
+          res.redirect('/applications');
+        });
+      })
+      .then(null, function(err){ // mongoose Promise error callback
+        throw err;
+      })
+      .end();
+  })
+  .end();
 });
 
 router.get('/:appId/edit', function(req, res){

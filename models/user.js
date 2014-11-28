@@ -18,7 +18,8 @@ var UserSchema = new mongoose.Schema({
   created: {
     type: Date,
     default: Date.now
-  }
+  },
+  applications: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Application' } ]
 });
 
 UserSchema.methods.encryptPassword = function(password){
