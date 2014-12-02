@@ -1,6 +1,7 @@
 var RSVP = require('rsvp');
 var MetricQuery = require('./query');
 
+// TODO: unsafe to use eval, use pegjs instead
 var evaluate = function(subExpression){
   return new RSVP.Promise(function(resolve, reject){
     (function(){

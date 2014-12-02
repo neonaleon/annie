@@ -13,6 +13,13 @@ module.exports = function(grunt){
       }
     },
 
+    peg: {
+      build: {
+        src: 'core/parser/parser.pegjs',
+        dest: 'core/parser/index.js'
+      }
+    },
+
     uglify: {
       build: {
         files: {
@@ -42,5 +49,5 @@ module.exports = function(grunt){
   });
 
   grunt.registerTask('default', []);
-  grunt.registerTask('build', ['shell:browserify', 'uglify:build', 'copy:build']);
+  grunt.registerTask('build', ['shell:browserify', 'peg:build', 'uglify:build', 'copy:build']);
 }
