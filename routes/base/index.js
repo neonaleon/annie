@@ -12,6 +12,9 @@ router.get('/', function(req, res) {
 });
 
 router.get('/login', function(req, res){
+  if (req.isAuthenticated()){
+    return res.redirect('/applications');
+  }
   res.render('base/login', {
     title: 'Login'
   });
