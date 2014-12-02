@@ -14,8 +14,11 @@ router.post('/track', function(req, res){
   console.log(req.body);
   EventModel.create({
     event: req.body.event,
-    data: req.body.data,
-    timestamp: req.body.timestamp
+    timestamp: req.body.timestamp,
+    meta: {
+      app_id: req.app._id,
+    },
+    data: req.body.data
   }, function(err){
     if (err) res.status(500).send(err);
 

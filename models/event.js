@@ -2,8 +2,11 @@ var mongoose = require('mongoose');
 
 var EventSchema = mongoose.Schema({
   event: String,
-  data: {},
-  timestamp: Date
+  timestamp: Date,
+  meta: {
+    app_id: mongoose.Schema.Types.ObjectId
+  },
+  data: {} // user data is namespaced here
 });
 
 module.exports = mongoose.model('Event', EventSchema);
