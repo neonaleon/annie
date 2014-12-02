@@ -2975,36 +2975,55 @@ var RSVP = require('rsvp');
 var annie = {
   options: {
     apiKey: '',
-    host: 'http://10.25.11.45:8000'
+    apiUrl: 'http://kts-leonho/annie/api'
   },
 
   init: function(){
     if ( arguments.length == 1 && typeof arguments[0] === 'string' ){
       this.options.apiKey = arguments[0];
-    } else {
-      console.error('Annie::apiKey not set.');
+      this._init = true;
     }
   },
 
-  page: function(name){
-    console.log('page');
-    request
-      .post(this.options.host + '/api/page')
-      .end(function(err, res){
-        if (res.error){
+  // page: function(name){
+  //   console.log('page');
+  //   request
+  //     .post(this.options.host + '/api/page')
+  //     .end(function(err, res){
+  //       if (res.error){
 
-        } else {
+  //       } else {
 
-        }
-      });
-  },
+  //       }
+  //     });
+  // },
+
+  // identify: function(uid, data){
+  //   console.log('identify');
+  //   request
+  //     .post(this.options.host + '/api/identify/' + uid)
+  //     .send(data)
+  //     .end(function(err, res){
+  //       if (res.error){
+
+  //       } else {
+
+  //       }
+  //     });
+  // },
 
   track: function(event, data){
+    if (!this._init){
+      console.error('Annie - apiKey not set, call init("YOUR-API-KEY") first!');
+      return;
+    }
     data = data || {};
-    var host = this.options.host;
+    var apiEndpoint = this.options.apiUrl + '/track';
+    var apiKey = this.options.apiKey;
     return new RSVP.Promise(function(resolve, reject){
       request
-        .post(host + '/api/track')
+        .post(apiEndpoint)
+        .set('X-API-KEY', apiKey)
         .send({
           event: event,
           data: data,
@@ -3015,20 +3034,6 @@ var annie = {
           reject(err);
         });
     });
-  },
-
-  identify: function(uid, data){
-    console.log('identify');
-    request
-      .post(this.options.host + '/api/identify/' + uid)
-      .send(data)
-      .end(function(err, res){
-        if (res.error){
-
-        } else {
-
-        }
-      });
   }
 }
 

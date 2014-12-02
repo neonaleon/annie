@@ -13,7 +13,7 @@ class Annie {
 
   }
 
-  public static function track($event, $data){
+  public static function track($event, $data = array()){
     $endpoint = self::$url . '/track';
     $outbound = json_encode(array(
       'event' => $event,
