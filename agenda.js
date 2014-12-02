@@ -29,12 +29,19 @@ agenda.database('localhost:27017/annie', 'agenda');
 // function version
 
 agenda.define('update metrics', function(job, done){
-  updateMetrics().then(function(apps){
+  console.log('--update metrics');
+  console.log('job started');
+  updateMetrics().then(function(metrics){
+    console.log('job complete');
     done();
   }, function(err){
+    console.log(err);
+    console.log('job failed');
     done();
   });
+  console.log('update metrics--');
 });
+console.log('Added job "update metrics"');
 
 agenda.every('*/1 * * * *', 'update metrics');
 
