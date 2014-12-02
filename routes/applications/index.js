@@ -28,9 +28,6 @@ router.get('/add', function(req, res){
 });
 
 router.post('/add', function(req, res){
-  var app = new ApplicationModel({
-
-  });
   ApplicationModel.create({
     appName: req.body.appName
   })
@@ -40,7 +37,7 @@ router.post('/add', function(req, res){
       .exec()
       .then(function(user){
         user.applications.push(app);
-        user.save(function(err){
+        user.save(function(err/*, user, n*/){
           res.redirect('/applications');
         });
       })
@@ -52,48 +49,52 @@ router.post('/add', function(req, res){
   .end();
 });
 
-router.get('/:appId/edit', function(req, res){
-  ApplicationModel.findOne({ _id: req.params.appId }).exec(function(err, app){
+router.get('/:app_id/edit', function(req, res){
+  ApplicationModel.findOne({ _id: req.params.app_id }).exec(function(err, app){
     app.title = app.title || 'Edit';
     res.render('applications/edit', app);
   });
 });
 
-router.post('/:appId/edit', function(req, res){
+router.post('/:app_id/edit', function(req, res){
   console.log(req.body, req.params);
   var updateFields = {
-    appName: req.body.appName,
-    domains: req.body.domains.replace(/\s/g, '').split(',')
+    appName: req.body.appName
+    // domains: req.body.domains.replace(/\s/g, '').split(',')
   }
-  if (req.body.regenerateApiKey == 'on'){
-    var hmac = crypto.createHmac('sha1', 'some random key');
-    hmac.update('xxxxxx');
-    var hash = hmac.digest('base64');
-    updateFields.apiKey = hash;
-  }
-  ApplicationModel.update({ _id: req.params.appId }, updateFields)
-  .exec(function(err, app){
-    res.redirect('/applications');
-  });
+  // if (req.body.regenerateApiKey == 'on'){
+  //   var hmac = crypto.createHmac('sha1', 'some random key');
+  //   hmac.update('xxxxxx');
+  //   var hash = hmac.digest('base64');
+  //   updateFields.apiKey = hash;
+  // }
+  ApplicationModel
+    .update({ _id: req.params.app_id }, updateFields)
+    .exec(function(err, app){
+      res.redirect('/applications');
+    });
 });
 
-router.get('/:appId/dashboard', function(req, res){
-  ApplicationModel.findOne({ _id: req.params.appId }).exec(function(err, doc){
-    doc.title = doc.title || 'Dashboard';
-    res.render('applications/dashboard', doc);
-  });
+router.get('/:app_id/dashboard', function(req, res){
+  ApplicationModel
+    .findOne({ _id: req.params.app_id })
+    .populate('metrics')
+    .exec(function(err, doc){
+      doc.title = doc.title || 'Dashboard';
+      console.log(doc);
+      res.render('applications/dashboard', doc);
+    });
 });
 
-router.get('/:appId/metric/add', function(req, res){
+router.get('/:app_id/metric/add', function(req, res){
   res.render('applications/metric/add', {
     title: 'Add Metric',
     expressionHelp: fs.readFileSync(path.join(__dirname, '../../views/applications/metric/help.md'), { encoding: 'utf8' })
   });
 });
 
-router.post('/:appId/metric/add', function(req, res){
-  var metric = new MetricModel();
-  metric.set({
+router.post('/:app_id/metric/add', function(req, res){
+  MetricModel.create({
     name: req.body.name,
     expression: req.body.expression,
     settings: {
@@ -101,16 +102,23 @@ router.post('/:appId/metric/add', function(req, res){
       format: req.body.format,
       labels: req.body.labels.split(/\s*,\s*/)
     }
-  });
-  // Add the metric to the model
-  ApplicationModel.findOne({ _id: req.params.appId }).exec(function(err, app){
-    app.metrics.push(metric);
-    app.save(function(err, app, n){
-      if (err) throw err;
-
-      res.redirect('/applications/' + app._id + '/dashboard');
+  })
+  .then(function(metric){
+    // Add the metric to the model
+    ApplicationModel
+      .findOne({ _id: req.params.app_id })
+      .exec()
+      .then(function(app){
+        app.metrics.push(metric);
+        app.save(function(err/*, app, n*/){
+          res.redirect('/applications/' + app._id + '/dashboard');
+        })
+      .then(null, function(err){
+        throw err;
+      })
     });
-  });
+  })
+  .end();
 });
 
 module.exports = router;

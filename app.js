@@ -49,6 +49,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// set up some locals for res.render
 app.use(function(req, res, next){
 	var session = res.locals.session = {
 		authenticated: false,
