@@ -1,5 +1,9 @@
 var valueTransform = function(input){
-  return input;
+  // expects an array with 1 doc { _id: null, value: X }
+  if (input && input.length > 0){
+    return input[0].value;
+  }
+  return 0;
 }
 
 var tableTransform = function(input, options){
@@ -58,19 +62,27 @@ var barChartTransform = function(input, options){
 
 var transform = function(input, options){
   options = options || {};
-  var transforms = {
-    'value': valueTransform,
-    'table': tableTransform,
-    'line_chart': lineChartTransform,
-    'bar_chart': lineChartTransform,
-    'pie_chart': pieChartTransform
+  var transformSelector = function(type, subtype){
+    switch(type){
+      case 'value':
+        return valueTransform;
+      case 'table':
+        return tableTransform;
+      case 'chart':
+        switch(subtype){
+          case 'line':
+            return lineChartTransform;
+          case 'bar':
+            return lineChartTransform;
+          case 'pie':
+            return pieChartTransform;
+        }
+      default:
+        break;
+    }
   }
-  var transform = transforms[options.type];
-  if ( transform ){
-    return transform(input, options);
-  } else {
-    // error! unhandled transform type
-  }
+  var transform = transformSelector(options.type, options.subtype);
+  return transform(input, options);
 };
 
 module.exports = transform;

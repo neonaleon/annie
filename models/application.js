@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var ApplicationSchema = new mongoose.Schema({
+var ApplicationSchema = mongoose.Schema({
   appName: String,
   // apiKey: String,
   metrics: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Metric' } ]

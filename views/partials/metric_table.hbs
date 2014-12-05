@@ -3,7 +3,7 @@
   <table class="table table-striped table-hover">
     <thead>
       <tr>
-      {{#with value}}
+      {{#with data}}
         {{#each labels}}
           <th>{{this}}</th>
         {{/each}}
@@ -11,8 +11,8 @@
       </tr>
     </thead>
     <tbody>
-      {{#with value}}
-        {{#each data}}
+      {{#with data}}
+        {{#each datum}}
           <tr>
             {{#each this}}
             <td>{{this}}</td>

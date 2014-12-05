@@ -3,12 +3,15 @@
 var RSVP = require('rsvp');
 var sprintf = require('sprintf-js').sprintf;
 
-var config = require('../config');
-var ApplicationModel = require('../models').ApplicationModel;
-var MetricModel = require('../models').MetricModel;
+var mongoose = require('mongoose');
 
-var compute = require('../core/metric').compute;
+var config = require('../config');
+var MetricModel = require('../models').MetricModel;
+var EventModel = require('../models').EventModel;
+
 var transform = require('../core/metric/transform');
+
+var parse = require('../core/parser').parse;
 
 var counter = 0;
 MetricModel
@@ -17,15 +20,33 @@ MetricModel
   .then(function(metrics){
     metrics.forEach(function(metric){
       counter += 1;
-      compute(metric.expression)
-        .then(function(value){
-          if (metric.settings.format.length !== 0){
-            value = sprintf(metric.settings.format, value);
-          }
-          metric.set('value', transform(value, {
-            type: metric.settings.metricType,
-            labels: metric.settings.labels
-          }));
+      // build query by parsing the expression
+      var query = parse(metric.expression);
+      // standard pipeline
+      var pipeline = [
+        { $match: { 'meta.app_id': metric.meta.app_id } },
+        { $match: { event: query.event } }
+      ];
+      // concat pipeline steps generated in the query
+      pipeline = pipeline.concat(query.pipeline);
+      // execution
+      // append additional steps for execution
+      var exec = query.exec;
+      if (exec.append){
+        pipeline = pipeline.concat(exec.append);
+      }
+      // run aggregate query with pipeline
+      EventModel
+        .aggregate(pipeline)
+        .exec()
+        .then(function(docs){
+          // transform query result with execution options
+          console.log("hehe", metric, docs, exec)
+          metric.set('result', {
+            data: transform(docs, exec.options),
+            options: exec.options
+          }, mongoose.Schema.Types.Mixed);
+          // save query result
           metric.save(function(err, metric, n){
             if (err) throw err;
             counter -= 1;
@@ -34,7 +55,12 @@ MetricModel
               process.exit(0);
             }
           });
-        });
+        })
+        .then(null, function(err){
+          console.error(err);
+          process.exit(1);
+        })
+        .end();
     });
   })
   .then(null, function(err){
@@ -42,48 +68,3 @@ MetricModel
     process.exit(1);
   })
   .end();
-
-// ApplicationModel
-//   .find({})
-//   .populate('metrics')
-//   .exec(function(err, apps){
-//     var counter = 0;
-//     apps.forEach(function(app){
-//       app.metrics.forEach(function(metric){
-//         console.log(metric);
-//         counter += 1;
-//         compute(metric.expression)
-//           .then(function(value){
-//             if (metric.settings.format.length !== 0){
-//               value = sprintf(metric.settings.format, value);
-//             }
-//             metric.set('value', transform(value, {
-//               type: metric.settings.metricType,
-//               labels: metric.settings.labels
-//             }));
-//             // save changes to the app after metric is updated
-//             counter -= 1;
-//             if (counter === 0) {
-//               apps.map(function(app){
-//                 counter += 1;
-//                 app.save(function(err, app, n){
-//                   if (err) {
-//                     console.log(err);
-//                     process.exit(1);
-//                   } else {
-//                     counter -= 1;
-//                     if (counter === 0){
-//                       process.exit(0);
-//                     }
-//                   }
-//                 });
-//               });
-//             }
-//           })
-//           .catch(function(err){
-//             console.log(err);
-//             process.exit(1);
-//           });
-//       });
-//     });
-// });

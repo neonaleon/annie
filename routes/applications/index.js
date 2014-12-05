@@ -57,17 +57,9 @@ router.get('/:app_id/edit', function(req, res){
 });
 
 router.post('/:app_id/edit', function(req, res){
-  console.log(req.body, req.params);
   var updateFields = {
     appName: req.body.appName
-    // domains: req.body.domains.replace(/\s/g, '').split(',')
   }
-  // if (req.body.regenerateApiKey == 'on'){
-  //   var hmac = crypto.createHmac('sha1', 'some random key');
-  //   hmac.update('xxxxxx');
-  //   var hash = hmac.digest('base64');
-  //   updateFields.apiKey = hash;
-  // }
   ApplicationModel
     .update({ _id: req.params.app_id }, updateFields)
     .exec(function(err, app){
@@ -81,7 +73,6 @@ router.get('/:app_id/dashboard', function(req, res){
     .populate('metrics')
     .exec(function(err, doc){
       doc.title = doc.title || 'Dashboard';
-      console.log(doc);
       res.render('applications/dashboard', doc);
     });
 });
@@ -97,10 +88,8 @@ router.post('/:app_id/metric/add', function(req, res){
   MetricModel.create({
     name: req.body.name,
     expression: req.body.expression,
-    settings: {
-      metricType: req.body.metricType,
-      format: req.body.format,
-      labels: req.body.labels.split(/\s*,\s*/)
+    meta: {
+      app_id: req.params.app_id
     }
   })
   .then(function(metric){

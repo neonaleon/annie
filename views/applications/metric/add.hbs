@@ -8,7 +8,7 @@
       <div class="form-group">
         <textarea class="form-control floating-label" name="expression" placeholder="Expression" rows="10"></textarea>
       </div>
-      <div class="form-group">
+{{!--       <div class="form-group">
         <input type="text" class="form-control floating-label" name="metricType" placeholder="Metric type">
       </div>
       <div class="form-group">
@@ -16,13 +16,15 @@
       </div>
       <div class="form-group">
         <input type="text" class="form-control floating-label" name="labels" placeholder="Table labels">
-      </div>
-      <input type="submit" class="btn btn-raised btn-primary" value="Submit">
+      </div> --}}
+      <input type="submit" class="btn btn-primary" value="Submit">
     </form>
   </div>
    <div class="col-md-6">
-    <div class="well">
-      {{{format-markdown expressionHelp}}}
+    <div class="panel">
+      <div class="panel-body">
+        {{{format-markdown expressionHelp}}}
+      </div>
     </div>
   </div>
 </div>

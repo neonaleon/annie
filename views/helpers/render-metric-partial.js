@@ -3,21 +3,27 @@ var path = require('path');
 var hbs = require('hbs');
 
 module.exports = function(){
+  console.dir(this.result);
   var source;
-  switch(this.settings.metricType){
+  switch(this.result.options.type){
     case 'value':
+      this.data = this.result.data;
       break;
     case 'table':
+      this.data = this.result.data;
       break;
-    case 'line_chart':
-    case 'pie_chart':
-    case 'bar_chart':
-      if (typeof this.value === 'object') {
-        this.value = JSON.stringify(this.value);
+    case 'chart':
+      switch(this.result.options.subtype){
+        case 'line':
+        case 'pie':
+        case 'bar':
+        this.data = JSON.stringify(this.result.data);
       }
       break;
   }
-  source = fs.readFileSync(path.join(__dirname, '../partials/metric_' + this.settings.metricType + '.hbs'), { encoding: 'utf8' });
+  var partialFile = '../partials/metric_' + this.result.options.type + (this.result.options.subtype ? ('_' + this.result.options.subtype) : '') + '.hbs';
+  console.log(partialFile);
+  source = fs.readFileSync(path.join(__dirname, partialFile), { encoding: 'utf8' });
   var template = hbs.handlebars.compile(source);
   return template(this);
 }
