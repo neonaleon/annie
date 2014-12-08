@@ -6,12 +6,12 @@ var cors = require('cors');
 var ApplicationModel = require('../../models/application');
 
 var corsOptionsDelegate = function(req, callback){
-  // dynamic whitelisting
-  var corsOptions = { origin: false };
-  // TODO: check the req's API_KEY and pull DB for the registered domain, whitelist it.
+  // TODO: dynamic whitelisting, check the req's API_KEY and pull DB for the registered domain, whitelist it.
+  // var corsOptions = { origin: false };
   // if (req.hostname == '10.25.11.45'){
   //   corsOptions = { origin: true };
   // }
+  var corsOptions = { origin: false };
   callback(null, corsOptions);
 }
 

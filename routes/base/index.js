@@ -6,6 +6,9 @@ var UserModel = require('../../models').UserModel;
 var router = express.Router();
 
 router.get('/', function(req, res) {
+  if (req.isAuthenticated()){
+    return res.redirect('/applications');
+  }
   res.render('index', {
     'title': 'Home'
   });
