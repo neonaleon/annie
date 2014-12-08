@@ -3,7 +3,9 @@
 
 // Credits
 // reltime function taken from https://github.com/rsdoiel/reltime/blob/master/reltime.js
-// many of the input types were written with reference to https://github.com/square/cube/blob/master/lib/cube/metric-expression.peg
+// many of the input types were written with reference to
+// https://github.com/square/cube/blob/master/lib/cube/metric-expression.peg
+// https://github.com/metamx/chronology/blob/master/lib/date-math/parser.pegjs
 
 // initialization block
 {
@@ -87,7 +89,8 @@ Primary =
   'event(' _ event:String _ ')' pipeline:('.' PipelineStep)* ('.' exec:TerminalStep) {
     var query = {};
     query.event = event;
-    query.pipeline = pipeline.map(function(d){ return d[1]; });
+    query.pipeline = [];
+    pipeline.forEach(function(e, i){ return query.pipeline.concat(e[1]); });
     query.exec = exec;
     return query;
   }
@@ -95,22 +98,55 @@ Primary =
 // Pipeline steps
 
 PipelineStep =
-  Where / From / To / Group / Sort
+  Where / From / To / Group / GroupBy / Sort
 
 Where =
-  'where(' _ obj:ObjectLiteral _ ')' { return { $match: obj }; }
+  'where(' _ obj:ObjectLiteral _ ')' { return [ { $match: obj } ]; }
 
 From =
-  'from(' _ ts:Timestamp _ ')' { return { $match: { timestamp: { $gte: ts } } }; }
+  'from(' _ ts:Timestamp _ ')' { return [ { $match: { timestamp: { $gte: ts } } } ]; }
 
 To =
-  'to(' _ ts:Timestamp _ ')' { return { $match: { timestamp: { $lte: ts } } }; }
+  'to(' _ ts:Timestamp _ ')' { return [ { $match: { timestamp: { $lte: ts } } } ]; }
 
 Group =
-  'group(' _ obj:ObjectLiteral _ ')' { return { $group: obj }; }
+  'group(' _ obj:ObjectLiteral _ ')' { return [ { $group: obj } ]; }
+
+// TODO: improve syntax for date grouping
+GroupBy =
+  'groupBy(' _ obj:ObjectLiteral _ ')' {
+    var timeGroup = obj._id;
+    if (timeGroup.year === 1) {
+      timeGroup.year = { $year: '$timestamp' };
+    }
+    if (timeGroup.month === 1) {
+      timeGroup.month = { $month: '$timestamp' };
+    }
+    if (timeGroup.day === 1) {
+      timeGroup.day = { $dayOfMonth: '$timestamp' };
+    }
+    if (timeGroup.week === 1) {
+      timeGroup.week = { $week: '$timestamp' };
+    }
+    if (timeGroup.hour === 1) {
+      timeGroup.hour = { $hour: '$timestamp' };
+    }
+    // reshape by time
+    var project = { $project: {
+        timeGroup: timeGroup,
+        timestamp: 1,
+        data: 1
+      }
+    };
+
+    obj._id = '$timeGroup';
+    var group = { $group: obj };
+    return [ project, group ];
+  }
+
 
 Sort =
-  'sort(' _ obj:ObjectLiteral _ ')' { return { $sort: obj }; }
+  'sort(' _ obj:ObjectLiteral _ ')' { return [ { $sort: obj } ]; }
 
 // Terminal step to end the expression
 
