@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
-    <div class="navbar navbar-default navbar-fixed-top">
+    <div class="navbar navbar-default navbar-fixed-top shadow-z-2">
       <div id="toolbar" class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="mdi-navigation-more-vert mdi-material-lightgrey navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
@@ -20,12 +20,17 @@
         <nav class="navbar-collapse collapse navbar-responsive-collapse">
           <ul class="nav navbar-nav">
             {{link-to 'Home' ''}}
-            {{link-to 'Applications' 'applications'}}
             {{link-to 'Developer' 'developer'}}
           </ul>
           <ul class="nav navbar-nav navbar-right">
             {{#if session.authenticated}}
-              <li><p class="navbar-text"> {{session.user.email}}</p></li>
+              <li class="dropdown">
+                <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">{{session.user.email}} <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  {{link-to 'Applications' 'applications'}}
+                  {{link-to 'Logout' 'logout'}}
+                </ul>
+              </li>
             {{else}}
               {{link-to 'Login' 'login'}}
             {{/if}}
@@ -48,13 +53,6 @@
     <script>
       $(document).ready(function() {
         $.material.init();
-      });
-      $(window).scroll(function(){
-        $('#toolbar').addClass('scrolled');
-
-        if ($(this).scrollTop() === 0){
-          $('#toolbar').removeClass('scrolled');
-        }
       });
 
       var dashboardItemClickHandler = function(event){
