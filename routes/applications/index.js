@@ -10,6 +10,8 @@ var ApplicationModel = models.ApplicationModel;
 var MetricModel = models.MetricModel;
 var EventModel = models.EventModel;
 
+var parse = require('../../core/parser').parse;
+
 router.get('/', function(req, res){
   UserModel
     .findOne({ _id: req.user })
@@ -78,36 +80,55 @@ router.get('/:app_id/dashboard', function(req, res){
 });
 
 router.get('/:app_id/metric/add', function(req, res){
-  res.render('applications/metric/add', {
-    title: 'Add Metric',
-    expressionHelp: fs.readFileSync(path.join(__dirname, '../../views/applications/metric/help.md'), { encoding: 'utf8' })
+  fs.readFile(path.join(__dirname, '../../views/applications/metric/help.md'), { encoding: 'utf8' }, function(err, data){
+    res.render('applications/metric/add', {
+      title: 'Add Metric',
+      expressionHelp: data
+    });
   });
 });
 
 router.post('/:app_id/metric/add', function(req, res){
-  MetricModel.create({
+  var query = null;
+  try {
+    query = parse(req.body.expression);
+  } catch(err) {
+    // parse error
+    console.error(err);
+    return ;
+  }
+
+  var metric = new MetricModel({
     name: req.body.name,
     expression: req.body.expression,
     meta: {
       app_id: req.params.app_id
     }
-  })
-  .then(function(metric){
-    // Add the metric to the model
-    ApplicationModel
-      .findOne({ _id: req.params.app_id })
-      .exec()
-      .then(function(app){
-        app.metrics.push(metric);
-        app.save(function(err/*, app, n*/){
-          res.redirect('/applications/' + app._id + '/dashboard');
-        })
-      .then(null, function(err){
-        throw err;
-      })
+  });
+
+  metric.update()
+    .then(function(){
+      metric.save(function(err, metric, n){
+        ApplicationModel
+          .findOne({ _id: req.params.app_id })
+          .exec()
+          .then(function(app){
+            app.metrics.push(metric);
+            app.save(function(err/*, app, n*/){
+              res.redirect('/applications/' + app._id + '/dashboard');
+            });
+          })
+          .then(null, function(err){
+            console.error(err);
+            throw err;
+          })
+          .end();
+      });
+    })
+    .catch(function(err){
+      console.error(err);
+      res.redirect('/applications/' + app._id + '/dashboard?err=1');
     });
-  })
-  .end();
 });
 
 module.exports = router;
