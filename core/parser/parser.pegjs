@@ -90,7 +90,11 @@ Primary =
     var query = {};
     query.event = event;
     query.pipeline = [];
-    pipeline.forEach(function(e, i){ return query.pipeline.concat(e[1]); });
+    // array of arrays containing aggregation pipeline objects
+    var steps = pipeline.map(function(d){ return d[1]; });
+    steps.forEach(function(step){
+      query.pipeline = query.pipeline.concat(step);
+    })
     query.exec = exec;
     return query;
   }
@@ -98,7 +102,7 @@ Primary =
 // Pipeline steps
 
 PipelineStep =
-  Where / From / To / Group / GroupBy / Sort
+  step:(Where / From / To / Group / GroupBy / Sort) { return step; }
 
 Where =
   'where(' _ obj:ObjectLiteral _ ')' { return [ { $match: obj } ]; }
@@ -110,7 +114,11 @@ To =
   'to(' _ ts:Timestamp _ ')' { return [ { $match: { timestamp: { $lte: ts } } } ]; }
 
 Group =
-  'group(' _ obj:ObjectLiteral _ ')' { return [ { $group: obj } ]; }
+  'group(' _ obj:ObjectLiteral _ ')' { return [
+    { $group: { _id: obj.label, value: obj.value } },
+    { $project: { label: '$_id', value: '$value'} }
+    ];
+  }
 
 // TODO: improve syntax for date grouping
 GroupBy =
@@ -214,8 +222,8 @@ Chart =
   }
 
 ChartType =
-  '"' $('line' / 'pie' / 'bar') '"'
-  / "'" $('line' / 'pie' / 'bar') "'"
+  '"' type:('line' / 'pie' / 'bar') '"' { return type; }
+  / "'" type:('line' / 'pie' / 'bar') "'" { return type; }
 
 
 // valid inputs
