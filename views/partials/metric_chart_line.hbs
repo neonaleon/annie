@@ -1,9 +1,13 @@
-<li class="dashboard-item" data-metric-id="{{_id}}" data-col="1" data-row="1" data-sizex="1" data-sizey="2">
-  <h1>{{name}}</h1>
-  <div class="metric-flot" data-metric-type="line">
-    <script class="metric-data" type="text/x-metric-data">
-    {{{data}}}
-    </script>
-    <canvas></canvas>
+<li data-metric-id="{{_id}}" data-col="1" data-row="1" data-sizex="1" data-sizey="2">
+  <div class="panel dashboard-item">
+    <div class="panel-body">
+      <h1>{{name}}</h1>
+      <div class="metric-flot" data-metric-type="line">
+        <script class="metric-data" type="text/x-metric-data">
+        {{{data}}}
+        </script>
+        <canvas></canvas>
+      </div>
+    </div>
   </div>
 </li>

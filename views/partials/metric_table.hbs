@@ -1,25 +1,29 @@
-<li class="dashboard-item" data-metric-id="{{_id}}" data-col="1" data-row="1" data-sizex="1" data-sizey="2">
-  <h1>{{name}}</h1>
-  <table class="table table-striped table-hover">
-    <thead>
-      <tr>
-      {{#with data}}
-        {{#each labels}}
-          <th>{{this}}</th>
-        {{/each}}
-      {{/with}}
-      </tr>
-    </thead>
-    <tbody>
-      {{#with data}}
-        {{#each datum}}
+<li data-metric-id="{{_id}}" data-col="1" data-row="1" data-sizex="1" data-sizey="2">
+  <div class="panel dashboard-item">
+    <div class="panel-body">
+      <h1>{{name}}</h1>
+      <table class="table table-striped table-hover">
+        <thead>
           <tr>
-            {{#each this}}
-            <td>{{this}}</td>
+          {{#with data}}
+            {{#each labels}}
+              <th>{{this}}</th>
             {{/each}}
+          {{/with}}
           </tr>
-        {{/each}}
-      {{/with}}
-    </tbody>
-  </table>
+        </thead>
+        <tbody>
+          {{#with data}}
+            {{#each datum}}
+              <tr>
+                {{#each this}}
+                <td>{{this}}</td>
+                {{/each}}
+              </tr>
+            {{/each}}
+          {{/with}}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </li>
