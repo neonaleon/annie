@@ -26,12 +26,13 @@ var tableTransform = function(input, options){
 
 var lineChartTransform = function(input, options){
   var output = {
-    labels: options.labels,
+    labels: [],//options.labels,
     data: []
   };
 
   // transform data for output in a table
   input.forEach(function(datum){
+    output.labels.push(datum.label);
     output.data.push(datum.value);
   });
 

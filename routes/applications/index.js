@@ -61,7 +61,7 @@ router.get('/:app_id/edit', function(req, res){
 router.post('/:app_id/edit', function(req, res){
   var updateFields = {
     appName: req.body.appName
-  }
+  };
   ApplicationModel
     .update({ _id: req.params.app_id }, updateFields)
     .exec(function(err, app){
@@ -73,9 +73,31 @@ router.get('/:app_id/dashboard', function(req, res){
   ApplicationModel
     .findOne({ _id: req.params.app_id })
     .populate('metrics')
-    .exec(function(err, doc){
-      doc.title = doc.title || 'Dashboard';
-      res.render('applications/dashboard', doc);
+    .exec(function(err, app){
+      app.title = app.title || 'Dashboard';
+      res.render('applications/dashboard', app);
+    });
+});
+
+router.post('/:app_id/dashboard', function(req, res){
+  // TODO: validate body
+  ApplicationModel
+    .update(
+      { _id: req.params.app_id },
+      { $set: { 'dashboard.layout': JSON.parse(req.body.dashboard.layout) }},
+      function(err){
+        //if (err)
+        res.status(200).end();
+      }
+    );
+});
+
+router.get('/:app_id/dashboard/layout', function(req, res){
+  // TODO: this seems cacheable
+  ApplicationModel
+    .findOne({ _id: req.params.app_id })
+    .exec(function(err, app){
+      res.status(200).send(app.dashboard.layout);
     });
 });
 
@@ -106,6 +128,7 @@ router.post('/:app_id/metric/add', function(req, res){
     }
   });
 
+  // see MetricModel's schema methods
   metric.update()
     .then(function(){
       metric.save(function(err, metric, n){
