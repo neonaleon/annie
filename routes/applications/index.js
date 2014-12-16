@@ -126,7 +126,7 @@ router.post('/:app_id/metric/add', function(req, res){
   });
 
   // see MetricModel's schema methods
-  metric.update()
+  metric.updateResult()
     .then(function(){
       metric.save(function(err, metric, n){
         ApplicationModel
@@ -149,6 +149,43 @@ router.post('/:app_id/metric/add', function(req, res){
       console.error(err);
       res.redirect('/applications/' + app._id + '/dashboard?err=1');
     });
+});
+
+router.get('/:app_id/metric/:metric_id', function(req, res){
+  MetricModel
+    .findOne({ _id: req.params.metric_id })
+    .exec()
+    .then(function(metric){
+      res.status(200).send({
+        name: metric.name,
+        expression: metric.expression
+      });
+    })
+    .then(null, function(err){
+
+    });
+});
+
+router.post('/:app_id/metric/:metric_id', function(req, res){
+  // TODO: validate body
+  var query = null;
+  try {
+    query = parse(req.body.expression);
+  } catch(err) {
+    // parse error
+    console.error(err);
+    return ;
+  }
+
+  MetricModel
+    .update(
+      { _id: req.params.metric_id },
+      { $set: { name: req.body.name, expression: req.body.expression } },
+      function(err, n, raw){
+        console.log(err, n, raw);
+        res.status(201).send();
+      }
+    );
 });
 
 module.exports = router;

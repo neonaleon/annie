@@ -16,7 +16,7 @@ MetricModel
     metrics.forEach(function(metric){
       counter += 1;
 
-      metric.update()
+      metric.updateResult()
         .then(function(){
           metric.save(function(err, metric, n){
             if (err) throw err;

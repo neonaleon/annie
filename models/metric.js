@@ -25,7 +25,7 @@ var MetricSchema = mongoose.Schema({
   },
 });
 
-MetricSchema.methods.update = function(){
+MetricSchema.methods.updateResult = function(){
   var metric = this;
 
   return new RSVP.Promise(function(resolve, reject){
