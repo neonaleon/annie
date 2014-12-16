@@ -22,9 +22,13 @@ module.exports = function(grunt){
 
     uglify: {
       build: {
+        options: {
+          mangle: false
+        },
         files: {
           'sdk/browser/annie.min.js': 'sdk/browser/annie.js',
-          '.tmp/Chart.min.js': 'lib/Chart.js/Chart.js'
+          '.tmp/Chart.min.js': 'lib/Chart.js/Chart.js',
+          'public/js/main.js': 'client/js/main.js'
         }
       }
     },
@@ -43,7 +47,20 @@ module.exports = function(grunt){
     },
 
     watch: {
-
+      parser: {
+        options: {
+          livereload: true
+        },
+        files: ['core/parser/parser.pegjs'],
+        tasks: ['peg:build']
+      },
+      js: {
+        options: {
+          livereload: true
+        },
+        files: ['client/js/*.js', 'sdk/**/*.js'],
+        tasks: ['build']
+      }
     }
 
   });
