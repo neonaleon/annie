@@ -82,14 +82,10 @@ router.get('/:app_id/dashboard', function(req, res){
 router.post('/:app_id/dashboard', function(req, res){
   // TODO: validate body
   ApplicationModel
-    .update(
-      { _id: req.params.app_id },
-      { $set: { 'dashboard.layout': JSON.parse(req.body.dashboard.layout) }},
-      function(err){
-        //if (err)
-        res.status(200).end();
-      }
-    );
+    .update({ _id: req.params.app_id }, { $set: { dashboard: req.body.dashboard } }, function(err, n, raw){
+      console.log(err, n, raw);
+      res.status(200).send();
+    });
 });
 
 router.get('/:app_id/dashboard/layout', function(req, res){
@@ -97,8 +93,9 @@ router.get('/:app_id/dashboard/layout', function(req, res){
   ApplicationModel
     .findOne({ _id: req.params.app_id })
     .exec(function(err, app){
-      res.status(200).send(app.dashboard.layout);
-    });
+      var layout = app.dashboard.layout || [];
+      res.status(200).send(layout);
+    })
 });
 
 router.get('/:app_id/metric/add', function(req, res){

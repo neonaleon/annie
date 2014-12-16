@@ -5,7 +5,8 @@ var ApplicationSchema = mongoose.Schema({
   // apiKey: String,
   metrics: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Metric' } ],
   dashboard: {
-    layout: { type: mongoose.Schema.Types.Mixed, default: {} }
+    type: mongoose.Schema.Types.Mixed, default: {},
+    layout: { type: mongoose.Schema.Types.Array, default: [] }
   }
 });
 

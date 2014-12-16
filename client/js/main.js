@@ -29,14 +29,17 @@ $(document).ready(function(){
     },
     draggable: {
       stop: function(e, ui){
+        var viewData = {
+          dashboard: {
+            layout: gridster.serialize()
+          }
+        };
+
         $.ajax({
           type: 'POST',
-          data: {
-            dashboard: {
-              layout: JSON.stringify(gridster.serialize())
-            }
-          },
-          dataType: 'json'
+          url: '',
+          data: JSON.stringify(viewData),
+          contentType: 'application/json; charset=utf-8'
         });
       }
     },
@@ -45,57 +48,71 @@ $(document).ready(function(){
         'metric-id': $w.data('metric-id'),
         col: wgd.col,
         row: wgd.row,
-        sizex:
-        wgd.size_x,
-        sizey: wgd.size_y
+        size_x: wgd.size_x,
+        size_y: wgd.size_y
       };
     }
   }).data('gridster');
 
   if (gridster){
-    gridster.deserialize = function(obj){
-      obj.forEach(function(info){
-        var elem = $('[data-metric-id=' + info['metric-id'] + ']');
-        Object.keys(info).forEach(function(k){
-          elem.attr('data-' + k, info[k]);
-        })
+
+    var initializeDashboardItems = function(){
+      $('.dashboard-item').mousedown(function(){
+        $(this).addClass('shadow-z-1');
       });
+
+      var dashboardItemClickHandler = function(event){
+        var $item = $(event.delegateTarget);
+        if ($item.hasClass('player-revert')){
+          return false;
+        }
+
+        $('#complete-dialog').data('modal', {
+          title: $item.data('metric-id'),
+          body: $item.data('metric-id'),
+          footer: '<button class="btn btn-primary" data-dismiss="modal">close</button>'
+        }).modal('show');
+      };
+
+      $('.gridster li').each(function(i, e){
+        var $item = $(e);
+        $item.on('transitionend', function(event){
+          // console.log(event);
+          $item.find('.dashboard-item').removeClass('shadow-z-1');
+          // player-revert is a gridster class that marks the last moved element
+          $item.removeClass('player-revert');
+        });
+        $item.on('click', dashboardItemClickHandler);
+      });
+    }
+
+    // add method to deserialize dashboard layout from server
+    gridster.deserialize = function(serialization){
+      var table = {};
+      var widgets = gridster.$widgets.each(function(){
+        var $w = $(this);
+        table[$w.data('metric-id')] = $w;
+      });
+
+      serialization.forEach(function(info){
+        var $w = table[info['metric-id']];
+        gridster.remove_widget($w);
+        // using add_widget on existing widget to reposition it
+        gridster.add_widget($w[0].outerHTML, info.size_x, info.size_y, info.col, info.row);
+      });
+
+      $('.loading-spinner').remove();
     };
+
+    $('.gridster').before('<div class="center-block loading-spinner"><div class="fa fa-spinner fa-spin fa-5x center-block loading-spinner"></div></div>');
 
     $.ajax({
       type: 'GET',
       url: location.href + '/layout'
     }).done(function(res){
-      console.log(res);
       gridster.deserialize(res);
-    })
 
-    $('.dashboard-item').mousedown(function(){
-      $(this).addClass('shadow-z-1');
-    });
-
-    var dashboardItemClickHandler = function(event){
-      var $item = $(event.delegateTarget);
-      if ($item.hasClass('player-revert')){
-        return false;
-      }
-
-      $('#complete-dialog').data('modal', {
-        title: $item.data('metric-id'),
-        body: $item.data('metric-id'),
-        footer: '<button class="btn btn-primary" data-dismiss="modal">close</button>'
-      }).modal('show');
-    };
-
-    $('.gridster li').each(function(i, e){
-      var $item = $(e);
-      $item.on('transitionend', function(event){
-        // console.log(event);
-        $item.find('.dashboard-item').removeClass('shadow-z-1');
-        // player-revert is a gridster class that marks the last moved element
-        $item.removeClass('player-revert');
-      });
-      $item.on('click', dashboardItemClickHandler);
+      initializeDashboardItems();
     });
 
     Chart.defaults.global.maintainAspectRatio = false;
@@ -163,6 +180,7 @@ $(document).ready(function(){
 
 // LOGIN
 $(document).ready(function(){
+  $('#loginEmail').focus();
   $('#loginPassword')
     .focusin(function(){
       $('#owl-login').addClass('password');
