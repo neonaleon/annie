@@ -86,7 +86,7 @@ start =
   Primary
 
 Primary =
-  'event(' _ event:String _ ')' pipeline:('.' PipelineStep)* ('.' exec:TerminalStep) {
+  _ 'event(' _ event:String _ ')' pipeline:('.' PipelineStep)* ('.' exec:TerminalStep) _ {
     var query = {};
     query.event = event;
     query.pipeline = [];
