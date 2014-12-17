@@ -12,6 +12,7 @@ var EventModel = models.EventModel;
 
 var parse = require('../../core/parser').parse;
 
+// APPLICATION
 router.get('/', function(req, res){
   UserModel
     .findOne({ _id: req.user })
@@ -69,6 +70,8 @@ router.post('/:app_id/edit', function(req, res){
     });
 });
 
+
+// DASHBOARD
 router.get('/:app_id/dashboard', function(req, res){
   ApplicationModel
     .findOne({ _id: req.params.app_id })
@@ -98,6 +101,7 @@ router.get('/:app_id/dashboard/layout', function(req, res){
     })
 });
 
+// METRICS
 router.get('/:app_id/metric/add', function(req, res){
   fs.readFile(path.join(__dirname, '../../views/applications/metric/help.md'), { encoding: 'utf8' }, function(err, data){
     res.render('applications/metric/add', {
@@ -183,9 +187,43 @@ router.post('/:app_id/metric/:metric_id', function(req, res){
       { $set: { name: req.body.name, expression: req.body.expression } },
       function(err, n, raw){
         console.log(err, n, raw);
-        res.status(201).send();
+        res.status(204).send();
       }
     );
+});
+
+router.get('/:app_id/metric/:metric_id/edit', function(req, res){
+  MetricModel
+    .findOne({ _id: req.params.metric_id })
+    .exec()
+    .then(function(metric){
+      metric.title = 'Edit Metric';
+      metric.expressionHelp = fs.readFileSync(path.join(__dirname, '../../views/applications/metric/help.md'), { encoding: 'utf-8' })
+      res.render('applications/metric/edit', metric);
+    })
+    .then(null, function(err){
+      console.log(err);
+    });
+});
+
+router.post('/:app_id/metric/:metric_id/edit', function(req, res){
+  var query = null;
+  try {
+    query = parse(req.body.expression);
+  } catch(err) {
+    // parse error
+    console.error(err);
+    return ;
+  }
+  MetricModel
+    .update(
+      { _id: req.params.metric_id },
+      { $set: { name: req.body.name, expression: req.body.expression } },
+      function(err, n, raw){
+        console.log(err, n, raw);
+        res.redirect('/applications/' + req.params.app_id + '/dashboard');
+      }
+    )
 });
 
 module.exports = router;

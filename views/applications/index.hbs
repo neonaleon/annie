@@ -4,30 +4,28 @@
     <a href="applications/add" class="btn btn-primary mdi-content-add pull-right"></a>
   </div>
 </div>
-{{#each apps}}
 <div class="row">
-  <div class="col-md-12">
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <label for="">Application Name</label>
-        <p>{{appName}}</p>
-        <label for="">API Key</label>
-        <p>{{apiKey}}</p>
-        <a href="applications/{{_id}}/edit" class="btn btn-default">Edit</a>
-        <a href="applications/{{_id}}/dashboard" class="btn btn-primary">Dashboard</a>
+  {{#each apps}}
+    <div class="col-md-3">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <label for="">Application Name</label>
+          <p>{{appName}}</p>
+          <label for="">API Key</label>
+          <p>{{apiKey}}</p>
+          <a href="applications/{{_id}}/edit" class="btn btn-default">Edit</a>
+          <a href="applications/{{_id}}/dashboard" class="btn btn-primary">Dashboard</a>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-{{else}}
-<div class="row">
-  <div class="col-md-12">
-    <div class="panel panel-default">
-      <div class="panel-body">
-        You don't have any applications yet.
-        <a href="applications/add" class="btn btn-primary">Add one now</a>
+  {{else}}
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          You don't have any applications yet.
+          <a href="applications/add" class="btn btn-primary">Add one now</a>
+        </div>
       </div>
     </div>
-  </div>
+  {{/each}}
 </div>
-{{/each}}

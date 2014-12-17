@@ -1,3 +1,5 @@
+var parse = require('../../core/parser').parse;
+
 // BS MATERIAL
 $(document).ready(function() {
   $.material.init();
@@ -67,18 +69,27 @@ $(document).ready(function(){
           return false;
         }
 
-        $('#complete-dialog').data('modal', {
-          title: $item.data('metric-id'),
-          body: $item.data('metric-id'),
-          footer: '<button class="btn btn-primary" data-dismiss="modal">close</button>'
-        }).modal('show');
+        var tokens = location.href.split('/');
+        tokens.length -= 1; // remove /dashboard
+        tokens.push('metric', $item.data('metric-id'));
+        var path = tokens.join('/');
+
+        $.get(path)
+        .done(function(res){
+          console.log(res);
+          $('#complete-dialog').data('modal', {
+            title: '<strong>' + res.name + '</strong>',
+            body: '<h6>Expression</h6>' + '<p>' + res.expression + '</p>',
+            footer: '<a class="btn btn-default" href="' + path + '/edit' + '">edit</a><button class="btn btn-primary" data-dismiss="modal">close</button>'
+          }).modal('show');
+        });
       };
 
       $('.gridster li').each(function(i, e){
         var $item = $(e);
         $item.on('transitionend', function(event){
-          // console.log(event);
-          $item.find('.dashboard-item').removeClass('shadow-z-1');
+          if (!$item.hasClass('dragging'))
+            $item.find('.dashboard-item').removeClass('shadow-z-1');
           // player-revert is a gridster class that marks the last moved element
           $item.removeClass('player-revert');
         });
@@ -98,21 +109,27 @@ $(document).ready(function(){
         var $w = table[info['metric-id']];
         gridster.remove_widget($w);
         // using add_widget on existing widget to reposition it
-        gridster.add_widget($w[0].outerHTML, info.size_x, info.size_y, info.col, info.row);
+        var size_x = $w.data('sizex');
+        var size_y = $w.data('sizey');
+        gridster.add_widget($w[0].outerHTML, size_x, size_y, info.col, info.row);
       });
 
       $('.loading-spinner').remove();
+      $('.gridster').each(function(){ $(this).css('opacity', 1); });
     };
 
-    $('.gridster').before('<div class="center-block loading-spinner"><div class="fa fa-spinner fa-spin fa-5x center-block loading-spinner"></div></div>');
+    $('.gridster').before('<div class="center-block loading-spinner"><div class="fa fa-spinner fa-spin fa-5x center-block loading-spinner"></div><h3>Loading your dashboard...</h3></div>');
+    $('.gridster').each(function(){ $(this).css('opacity', 0); });
 
     $.ajax({
       type: 'GET',
       url: location.href + '/layout'
     }).done(function(res){
-      gridster.deserialize(res);
-
-      initializeDashboardItems();
+      setTimeout(function(){
+        gridster.deserialize(res);
+        initializeDashboardItems();
+        drawCharts();
+      }, 1000);
     });
 
     Chart.defaults.global.maintainAspectRatio = false;
@@ -164,9 +181,6 @@ $(document).ready(function(){
               datum.color = colors[i % colors.length];
             });
             chart = new Chart(ctx).Pie(data, options);
-            // var img = $('<img>');
-            // img.attr('src', pieChart.toBase64Image());
-            // canvas.after(img);
             var legend = $(chart.generateLegend());
             $(e).find('.legend').append(legend);
             break;
@@ -174,7 +188,6 @@ $(document).ready(function(){
         $(e).data('chart', chart);
       });
     }
-    drawCharts();
   }
 });
 
@@ -188,4 +201,36 @@ $(document).ready(function(){
     .focusout(function(){
       $('#owl-login').removeClass('password');
     });
-})
+});
+
+// METRIC
+$(document).ready(function(){
+  var timer = null;
+  var scheduleParseInput = function(){
+    var input = $(this).val();
+    var inputFormGroup = $('#expression-form-group');
+    var helpBlock = $('#expression-feedback');
+    var submitButton = $('#submitButton');
+    if (timer){
+      clearTimeout(timer);
+    }
+    timer = setTimeout(function(){
+      try {
+        var result = parse(input);
+        inputFormGroup.removeClass('has-error');
+        helpBlock.html('');
+        submitButton.removeAttr('disabled');
+      } catch(e){
+        inputFormGroup.addClass('has-error');
+        helpBlock.html('<p>Parse Error</p><p>' + 'at line: ' + e.line + ' column: ' + e.column + '</p><p>' + e.message + '</p>');
+        submitButton.attr('disabled', 'disabled');
+      }
+    }, 500);
+  }
+  $('#expression-input').each(function(){
+    $(this)
+      .change(scheduleParseInput)
+      .keyup(scheduleParseInput)
+      .keydown(scheduleParseInput);
+  });
+});
