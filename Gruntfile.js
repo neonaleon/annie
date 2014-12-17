@@ -7,9 +7,12 @@ module.exports = function(grunt){
     pkg: grunt.file.readJSON('package.json'),
 
     shell: {
-      browserify: {
+      sdk: {
         // -r externalizes the module as annie
         command: 'browserify -r ./sdk/node/annie.js:annie > ./sdk/browser/annie.js'
+      },
+      main: {
+        command: 'browserify ./client/js/main.js > ./public/js/main.js'
       }
     },
 
@@ -41,7 +44,13 @@ module.exports = function(grunt){
             cwd: 'lib/Chart.js/',
             src: ['Chart.js', 'Chart.min.js'],
             dest: 'public/js/'
-          }
+          },
+          // {
+          //   expand: true,
+          //   cwd: 'client/js/',
+          //   src: ['main.js'],
+          //   dest: 'public/js/'
+          // }
         ]
       }
     },
@@ -66,5 +75,5 @@ module.exports = function(grunt){
   });
 
   grunt.registerTask('default', []);
-  grunt.registerTask('build', ['shell:browserify', 'peg:build', 'uglify:build', 'copy:build']);
+  grunt.registerTask('build', ['peg:build', 'shell', 'uglify:build', 'copy:build']);
 }
