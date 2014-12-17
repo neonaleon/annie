@@ -14,33 +14,6 @@ var annie = {
     }
   },
 
-  // page: function(name){
-  //   console.log('page');
-  //   request
-  //     .post(this.options.host + '/api/page')
-  //     .end(function(err, res){
-  //       if (res.error){
-
-  //       } else {
-
-  //       }
-  //     });
-  // },
-
-  // identify: function(uid, data){
-  //   console.log('identify');
-  //   request
-  //     .post(this.options.host + '/api/identify/' + uid)
-  //     .send(data)
-  //     .end(function(err, res){
-  //       if (res.error){
-
-  //       } else {
-
-  //       }
-  //     });
-  // },
-
   track: function(event, data){
     if (!this._init){
       console.error('Annie - apiKey not set, call init("YOUR-API-KEY") first!');
