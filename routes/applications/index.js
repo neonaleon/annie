@@ -215,15 +215,26 @@ router.post('/:app_id/metric/:metric_id/edit', function(req, res){
     console.error(err);
     return ;
   }
+
   MetricModel
-    .update(
-      { _id: req.params.metric_id },
-      { $set: { name: req.body.name, expression: req.body.expression } },
-      function(err, n, raw){
-        console.log(err, n, raw);
-        res.redirect('/applications/' + req.params.app_id + '/dashboard');
-      }
-    )
+    .findOne({ _id: req.params.metric_id })
+    .exec()
+    .then(function(metric){
+      metric.name = req.body.name;
+      metric.expression = req.body.expression;
+      metric.updateResult()
+        .then(function(){
+          metric.save(function(err, metric, n){
+            res.redirect('/applications/' + req.params.app_id + '/dashboard');
+          });
+        })
+        .catch(function(err){
+          throw err;
+        });
+    })
+    .then(null, function(err){
+      console.error(err);
+    });
 });
 
 module.exports = router;
