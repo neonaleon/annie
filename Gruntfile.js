@@ -78,6 +78,12 @@ module.exports = function(grunt){
         },
         files: ['client/css/*.less'],
         tasks: ['shell:css']
+      },
+      html: {
+        options: {
+          livereload: true
+        },
+        files: ['views/**/*']
       }
     }
 

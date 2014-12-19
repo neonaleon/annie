@@ -1,3 +1,4 @@
+@import "../../bower_components/bootstrap/less/bootstrap.less";
 @import "../../bower_components/bootstrap-material-design/less/material-wfont.less";
 
 // Override @primary color with one took from _colors.less
@@ -104,6 +105,11 @@ main {
 }
 
 /* MARKETING */
+
+.marketing {
+  font-size: 1.6em;
+}
+
 .marketing > .row:nth-child(even) {
   // border-color: #9e9e9e;
   // border-style: solid;
@@ -112,10 +118,13 @@ main {
 }
 
 .marketing > .row:nth-child(odd) {
-  background-color: lighten(@indigo, 20%);
+  // background-color: lighten(@indigo, 20%);
 }
 
 .marketing > .row > .content {
+  .make-md-column(10);
+  .make-md-column-offset(1);
+
   height: 50vh;
   display: flex;
   flex-direction: row;
@@ -129,12 +138,13 @@ main {
 }
 
 #splash {
-  width: 100vw;
   background-image: url(https://ununsplash.imgix.net/uploads/1412825195419af52b492/8bc72ed7?q=75&fm=jpg&s=4f35827a6dc766d393fc51fce493d85d);
-  background-position: 0 50%;
+  background-position: 0 60%;
   background-repeat: no-repeat;
+}
 
-  /*color: white;*/
+#footer > .content {
+  height: 10vh;
 }
 
 .footer {
