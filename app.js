@@ -24,7 +24,7 @@ app.set('trust proxy', '10.25.11.45');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-hbs.registerHelper('if-column-index', require('./views/helpers/if-column-index'));
+// hbs.registerHelper('if-column-index', require('./views/helpers/if-column-index'));
 hbs.registerHelper('format-markdown', require('./views/helpers/format-markdown'));
 hbs.registerHelper('render-metric-partial', require('./views/helpers/render-metric-partial'));
 hbs.registerHelper('link-to', require('./views/helpers/link-to'));
@@ -72,6 +72,7 @@ app.use(function(req, res, next){
 // unprotected routes
 app.use('/', require('./routes/base'));
 app.use('/developer', require('./routes/developer'));
+app.use('/about', require('./routes/about'));
 app.use('/api', require('./routes/api'));
 
 // protected routes
