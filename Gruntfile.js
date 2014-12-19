@@ -13,6 +13,9 @@ module.exports = function(grunt){
       },
       main: {
         command: 'browserify ./client/js/main.js > ./public/js/main.js'
+      },
+      css: {
+        command: 'lessc ./client/css/style.less > ./public/css/style.css'
       }
     },
 
@@ -30,8 +33,7 @@ module.exports = function(grunt){
         },
         files: {
           'sdk/browser/annie.min.js': 'sdk/browser/annie.js',
-          '.tmp/Chart.min.js': 'lib/Chart.js/Chart.js',
-          'public/js/main.js': 'client/js/main.js'
+          '.tmp/Chart.min.js': 'lib/Chart.js/Chart.js'
         }
       }
     },
@@ -69,6 +71,13 @@ module.exports = function(grunt){
         },
         files: ['client/js/*.js', 'sdk/**/*.js'],
         tasks: ['build']
+      },
+      less: {
+        options: {
+          livereload: true
+        },
+        files: ['client/css/*.less'],
+        tasks: ['shell:css']
       }
     }
 

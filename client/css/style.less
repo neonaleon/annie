@@ -1,0 +1,231 @@
+@import "../../bower_components/bootstrap-material-design/less/material-wfont.less";
+
+// Override @primary color with one took from _colors.less
+@primary: @indigo;
+
+html {
+  overflow-y: scroll;
+}
+
+#owl-login {
+  position: relative;
+  z-index: 1;
+  background-image: url("../img/head.png");
+  width: 237px;
+  height: 108px;
+}
+
+#owl-login .arms {
+  top: 58px;
+  position: absolute;
+  width: 100%;
+  height: 41px;
+  overflow: hidden;
+}
+
+#owl-login .arm {
+  width: 40px;
+  height: 65px;
+  position: absolute;
+  left: 20px;
+  top: 40px;
+  background-image: url("../img/arm.png");
+  -webkit-transition: 0.3s ease-out;
+  -moz-transition: 0.3s ease-out;
+  -o-transition: 0.3s ease-out;
+  -ms-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
+  -webkit-transform: rotate(-20deg);
+  -moz-transform: rotate(-20deg);
+  -o-transform: rotate(-20deg);
+  -ms-transform: rotate(-20deg);
+  transform: rotate(-20deg);
+}
+#owl-login .arm.arm-r {
+  transform: rotate(20deg) scaleX(-1);
+  left: 154px;
+}
+#owl-login.password .arm {
+  transform: translateY(-40px) translateX(40px);
+}
+#owl-login.password .arm.arm-r {
+  transform: translateY(-40px) translateX(-40px) scaleX(-1);
+}
+
+#owl-login .hand {
+  width: 34px;
+  height: 34px;
+  -webkit-border-radius: 40px;
+  border-radius: 40px;
+  background-color: #472d20;
+  -webkit-transform: scaleY(0.6);
+  -moz-transform: scaleY(0.6);
+  -o-transform: scaleY(0.6);
+  -ms-transform: scaleY(0.6);
+  transform: scaleY(0.6);
+  -webkit-transition: 0.3s ease-out;
+  -moz-transition: 0.3s ease-out;
+  -o-transition: 0.3s ease-out;
+  -ms-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
+  position: absolute;
+  left: 14px;
+  bottom: -8px;
+}
+#owl-login .hand.hand-r {
+  left: 166px;
+}
+#owl-login.password .hand {
+  transform: translateY(-15px) translateX(42px) scale(0.7);
+}
+#owl-login.password .hand.hand-r {
+  transform: translateY(-15px) translateX(-42px) scale(0.7);
+}
+
+#toolbar.scrolled {
+  /*shadow-z-1*/
+  /*box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);*/
+  /*shadow-z-2*/
+  /*box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);*/
+  /*shadow-z-3*/
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+.shadow-z-1 {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23) !important;
+  -webkit-transition: box-shadow 200ms ease-in-out;
+  -moz-transition: box-shadow 200ms ease-in-out;
+  -o-transition: box-shadow 200ms ease-in-out;
+  transition: box-shadow 200ms ease-in-out;
+}
+
+main {
+  margin-top: 60px;
+}
+
+/* MARKETING */
+.marketing > .row:nth-child(even) {
+  // border-color: #9e9e9e;
+  // border-style: solid;
+  // border-width: 1px 0px 1px 0px;
+  background-color: lighten(@indigo, 30%);
+}
+
+.marketing > .row:nth-child(odd) {
+  background-color: lighten(@indigo, 20%);
+}
+
+.marketing > .row > .content {
+  height: 50vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;  /*    Align the flex-items vertically */
+  /*justify-content: center; /* Optional, to align inner flex-items
+                              horizontally within the column  */
+}
+
+.marketing > .row > .content .feature {
+  text-align: center;
+}
+
+#splash {
+  width: 100vw;
+  background-image: url(https://ununsplash.imgix.net/uploads/1412825195419af52b492/8bc72ed7?q=75&fm=jpg&s=4f35827a6dc766d393fc51fce493d85d);
+  background-position: 0 50%;
+  background-repeat: no-repeat;
+
+  /*color: white;*/
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  text-align: center;
+}
+
+.loading-spinner {
+  text-align: center;
+}
+
+.dashboard-item {
+  /*box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);*/
+  -webkit-transition: box-shadow 200ms ease-in-out;
+  -moz-transition: box-shadow 200ms ease-in-out;
+  -o-transition: box-shadow 200ms ease-in-out;
+  transition: box-shadow 200ms ease-in-out;
+  cursor: pointer;
+  height: 100%;
+}
+
+.gridster ul {
+  list-style: none
+}
+
+.pie-legend {
+  padding-left: 0px !important;
+}
+
+.pie-legend li {
+  display: block;
+  padding-left: 30px;
+  position: relative;
+  margin-bottom: 4px;
+  border-radius: 5px;
+  padding: 2px 8px 2px 28px;
+  font-size: 14px;
+  cursor: default;
+  -webkit-transition: background-color 200ms ease-in-out;
+  -moz-transition: background-color 200ms ease-in-out;
+  -o-transition: background-color 200ms ease-in-out;
+  transition: background-color 200ms ease-in-out;
+}
+
+.pie-legend li span {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 100%;
+  border-radius: 5px;
+}
+
+.row-no-padding {
+  margin-left: 0;
+  margin-right: 0;
+  [class*="col-"] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+/* extend bootstrap's responsiveness */
+/* http://www.minimit.com/articles/solutions-tutorials/bootstrap-3-responsive-centered-columns */
+
+/* centered columns styles */
+.row-centered {
+    text-align:center;
+}
+.col-centered {
+    display:inline-block;
+    float:none;
+    /* reset the text-align */
+    text-align:left;
+    /* inline-block space fix */
+    margin-right:-4px;
+}
+
+.col-fixed {
+    /* custom width */
+    width:320px;
+}
+.col-min {
+    /* custom min width */
+    min-width:320px;
+}
+.col-max {
+    /* custom max width */
+    max-width:320px;
+}
