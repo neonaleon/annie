@@ -12421,7 +12421,7 @@ main {
 .marketing {
   font-size: 1.6em;
 }
-.marketing > .row:nth-child(even) {
+.marketing > .row:nth-child(odd) {
   background-color: #abb4e2;
 }
 .marketing > .row > .content {
@@ -12449,7 +12449,15 @@ main {
   }
 }
 .marketing > .row > .content .feature {
+  background-image: radial-gradient(45px 45px 45deg, circle cover, yellow 0%, orange 100%, red 95%);
+  padding: 10px;
   text-align: center;
+  height: 50vh;
+  margin-top: 25vh;
+}
+.marketing > .row > .content .feature .material-icon,
+.marketing > .row > .content .feature .fa {
+  font-size: 5em;
 }
 #splash {
   background-image: url(https://ununsplash.imgix.net/uploads/1412825195419af52b492/8bc72ed7?q=75&fm=jpg&s=4f35827a6dc766d393fc51fce493d85d);
