@@ -1,12 +1,12 @@
 var faker = require('faker');
 var expect = require('chai').expect;
 var reltime = require('reltime');
-var compute = require('../../../../core/metric').compute;
-var MetricQuery = require('../../../../core/metric/query');
 
 var config = require('../../../../config'); // load app configs
 var models = require('../../../../models');
 var EventModel = models.EventModel;
+
+var parse = require('../../../../core/parser').parse;
 
 describe('MetricQuery', function(){
 
@@ -37,14 +37,16 @@ describe('MetricQuery', function(){
     });
 
     it('should be 80 nodejs lovers', function(done){
-      MetricQuery.event('survey')
-        .where({ 'data.loves': 'nodejs' })
-        .count()
-        .value()
-        .then(function(count){
-          expect(count).to.be.equal(80);
-          done();
-        });
+      // MetricQuery.event('survey')
+      //   .where({ 'data.loves': 'nodejs' })
+      //   .count()
+      //   .value()
+      //   .then(function(count){
+      //     expect(count).to.be.equal(80);
+      //     done();
+      //   });
+      var result = parse('event("survey").where({ "data.loves": "nodejs" }).count()');
+      console.log(result);
     });
 
     it('should be 20 rails lovers', function(done){
@@ -124,6 +126,7 @@ describe('MetricQuery', function(){
       for (i = 0; i < gachaBuyers; i++){
         docs.push({
           event: 'bought gacha',
+          timestamp: reltime.parse(new Date(), '-400d'),
           data: {
             'gacha_id': 19,
             'buyer_id': i,
@@ -134,6 +137,7 @@ describe('MetricQuery', function(){
       for (i = 0; i < gachaBuyers; i++){
         docs.push({
           event: 'bought gacha',
+          timestamp: reltime.parse(new Date(), '-400d'),
           data: {
             'gacha_id': 19,
             'buyer_id': i,
@@ -191,6 +195,41 @@ describe('MetricQuery', function(){
         .value()
         .then(function(count){
           expect(count).to.be.equal(60);
+          done();
+        });
+    });
+
+    it('hehe', function(done){
+      // MetricQuery.event('bought gacha')
+      //   .group({ _id: '$data.price', quantity: { $sum: 1 }, sales: { $sum: '$data.price' } })
+      //   .sort('sales') // sort by sales ascending
+      //   .value()
+      //   .then(function(docs){
+      //     console.log(docs);
+      //     done();
+      //   });
+      compute("event('bought gacha').group({ _id: '$data.price', sales: { $sum: '$data.price' }}).sort({ sales: 1 }).value()")
+        .then(function(docs){
+          console.log(docs);
+          done();
+        });
+    });
+
+    it('haha', function(done){
+      MetricQuery.event('bought gacha')
+        // .time()
+        // .group({ _id: '$data.price', quantity: { $sum: 1 }, sales: { $sum: '$data.price' } })
+        // .table({ labels: [ '_id' ] })
+        // .project({ _id: '$timestamp'  })
+        // .groupBy({ value: { $sum: '$data.price' } })
+
+        // .project({ year: { $year: '$timestamp' }, data: 1 })
+        // .group({ _id: '$year', value: { $sum: '$data.price' } })
+
+        .groupBy({ _id: { year: 1 }, value: { $sum: '$data.price' } })
+        .table()
+        .then(function(docs){
+          console.log(docs);
           done();
         });
     });
