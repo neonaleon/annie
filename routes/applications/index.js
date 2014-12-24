@@ -3,6 +3,7 @@ var router = express.Router();
 var crypto = require('crypto');
 var fs = require('fs');
 var path = require('path');
+var validator = require('validator');
 
 var models = require('../../models');
 var UserModel = models.UserModel;
@@ -31,6 +32,10 @@ router.get('/add', function(req, res){
 });
 
 router.post('/add', function(req, res){
+  if (validator.isNull(req.body.appName)) {
+    throw new Error('No application name given.');
+    return;
+  }
   ApplicationModel.create({
     appName: req.body.appName
   })
