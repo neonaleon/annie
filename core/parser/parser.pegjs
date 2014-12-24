@@ -99,10 +99,13 @@ Primary =
     return query;
   }
 
+Event =
+ 'event(' _
+
 // Pipeline steps
 
 PipelineStep =
-  step:(Where / From / To / Group / GroupBy / Sort) { return step; }
+  step:(Where / From / To / Group / GroupBy / Sort / Limit) { return step; }
 
 Where =
   'where(' _ obj:ObjectLiteral _ ')' { return [ { $match: obj } ]; }
@@ -115,46 +118,47 @@ To =
 
 Group =
   'group(' _ obj:ObjectLiteral _ ')' { return [
-    { $group: { _id: obj.label, value: obj.value } },
-    { $project: { label: '$_id', value: '$value'} }
+      { $group: { _id: obj.label, value: obj.value } },
+      { $project: { label: '$_id', value: '$value'} }
     ];
   }
 
 // TODO: improve syntax for date grouping
 GroupBy =
   'groupBy(' _ obj:ObjectLiteral _ ')' {
-    var timeGroup = obj._id;
-    if (timeGroup.year === 1) {
+    var timeGroup = {};
+    if (obj.year === 1) {
       timeGroup.year = { $year: '$timestamp' };
     }
-    if (timeGroup.month === 1) {
+    if (obj.month === 1) {
       timeGroup.month = { $month: '$timestamp' };
     }
-    if (timeGroup.day === 1) {
+    if (obj.day === 1) {
       timeGroup.day = { $dayOfMonth: '$timestamp' };
     }
-    if (timeGroup.week === 1) {
+    if (obj.week === 1) {
       timeGroup.week = { $week: '$timestamp' };
     }
-    if (timeGroup.hour === 1) {
+    if (obj.hour === 1) {
       timeGroup.hour = { $hour: '$timestamp' };
     }
     // reshape by time
     var project = { $project: {
         timeGroup: timeGroup,
-        timestamp: 1,
+        // timestamp: 1, timestamp is converted to timegroup, so no need to keep
         data: 1
       }
     };
-
-    obj._id = '$timeGroup';
-    var group = { $group: obj };
-    return [ project, group ];
+    var group = { $group: { _id: '$timeGroup', value: obj.value } };
+    var relabel = { $project: { label: '$_id', value: '$value' } };
+    return [ project, group, relabel ];
   }
-
 
 Sort =
   'sort(' _ obj:ObjectLiteral _ ')' { return [ { $sort: obj } ]; }
+
+Limit =
+  'limit(' _ num:Integer _ ')' { return [ { $limit: num }]; }
 
 // Terminal step to end the expression
 
@@ -174,9 +178,9 @@ Count =
   }
 
 Sum =
-  'sum()' {
+  'sum(' _ str:String _ ')' {
     return {
-      append: [{ $group: { _id: null, value: { $avg: '$something' } } }],
+      append: [{ $group: { _id: null, value: { $sum: str } } }],
       options: {
         type: 'value',
         subtype: null,
@@ -186,9 +190,9 @@ Sum =
   }
 
 Average =
-  'average()' {
+  'average(' _ str:String _ ')' {
     return {
-      append: [{ $group: { _id: null, value: { $avg: '$something' } } }],
+      append: [{ $group: { _id: null, value: { $avg: str } } }],
       options: {
         type: 'value',
         subtype: null,
@@ -340,12 +344,17 @@ Whitespace =
 _ =
   Whitespace*
 
+// TODO: add floats
 Number =
+  number:Int { return parseInt(number, 10); }
+
+Integer =
   number:Int { return parseInt(number, 10); }
 
 Int =
   $(Digit19 Digits)
   / $Digit
+  / $('-' _ Int)
 
 Digit =
   [0-9]
