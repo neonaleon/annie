@@ -72,7 +72,6 @@ app.use(function(req, res, next){
 // unprotected routes
 app.use('/', require('./routes/base'));
 app.use('/developer', require('./routes/developer'));
-app.use('/about', require('./routes/about'));
 app.use('/api', require('./routes/api'));
 
 // protected routes
