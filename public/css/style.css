@@ -12515,6 +12515,9 @@ main {
   height: 100%;
   border-radius: 5px;
 }
+#alert-area {
+  margin-top: 10px;
+}
 .row-no-padding {
   margin-left: 0;
   margin-right: 0;

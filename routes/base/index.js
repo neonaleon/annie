@@ -51,7 +51,7 @@ router.post('/signup', function(req, res){
     password: password
   })
   .then(function(user){
-    res.redirect('/applications');
+    res.redirect('/login?signedup=1');
   })
 });
 
