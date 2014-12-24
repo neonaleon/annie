@@ -47,6 +47,18 @@ module.exports = function(grunt){
             src: ['Chart.js', 'Chart.min.js'],
             dest: 'public/js/'
           },
+          {
+            expand: true,
+            cwd: 'lib/prismjs/',
+            src: ['prism.js'],
+            dest: 'public/js/'
+          },
+          {
+            expand: true,
+            cwd: 'lib/prismjs/',
+            src: ['prism.css'],
+            dest: 'public/css/'
+          }
           // {
           //   expand: true,
           //   cwd: 'client/js/',
