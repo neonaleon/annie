@@ -30,8 +30,12 @@ var lineChartTransform = function(input, options){
     data: []
   };
 
-  // transform data for output in a table
   input.forEach(function(datum){
+    if (typeof datum.label === 'object'){
+      var tg = datum.label; // timeGroup, see parser.pegjs
+      // use the finest part of the timeGroup as the label
+      datum.label = tg.hour || tg.day || tg.week || tg.month || tg.year;
+    }
     output.labels.push(datum.label);
     output.data.push(datum.value);
   });
@@ -42,7 +46,6 @@ var lineChartTransform = function(input, options){
 var pieChartTransform = function(input, options){
   var output = [];
 
-  // transform data for output in a table
   input.forEach(function(datum){
     output.push({
       value: datum.value,

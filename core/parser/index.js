@@ -96,8 +96,9 @@ module.exports = (function() {
               }
             };
             var group = { $group: { _id: '$timeGroup', value: obj.value } };
+            var sort = { $sort: { '_id': 1 } }; // default to ascending time
             var relabel = { $project: { label: '$_id', value: '$value' } };
-            return [ project, group, relabel ];
+            return [ project, group, sort, relabel ];
           },
         peg$c25 = "sort(",
         peg$c26 = { type: "literal", value: "sort(", description: "\"sort(\"" },
