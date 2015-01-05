@@ -203,7 +203,17 @@ $(document).ready(function(){
     .focusout(function(){
       $('#owl-login').removeClass('password');
     });
+
+
+  var alert = $('#alert-area .login-failure');
+  alert.hide();
+  var qs = getUrlParameters();
+  if (qs['status'] == 'failed'){
+    alert.show();
+  }
 });
+
+
 
 // METRIC
 $(document).ready(function(){
@@ -251,7 +261,7 @@ $(document).ready(function(){
 });
 
 $(document).ready(function(){
-  var alert = $('#alert-area');
+  var alert = $('#alert-area .signup-success');
   alert.hide();
   var qs = getUrlParameters();
   if (qs['signedup']){

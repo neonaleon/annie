@@ -25,7 +25,7 @@ router.get('/login', function(req, res){
 
 router.post('/login',
   passport.authenticate('local', {
-    failureRedirect: 'login'
+    failureRedirect: '/login?status=failed'
   }),
   function(req, res){
     res.redirect('/applications');
