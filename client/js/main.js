@@ -107,11 +107,13 @@ $(document).ready(function(){
 
       serialization.forEach(function(info){
         var $w = table[info['metric-id']];
-        gridster.remove_widget($w);
-        // using add_widget on existing widget to reposition it
-        var size_x = $w.data('sizex');
-        var size_y = $w.data('sizey');
-        gridster.add_widget($w[0].outerHTML, size_x, size_y, info.col, info.row);
+        if ($w) {
+          gridster.remove_widget($w);
+          // using add_widget on existing widget to reposition it
+          var size_x = $w.data('sizex');
+          var size_y = $w.data('sizey');
+          gridster.add_widget($w[0].outerHTML, size_x, size_y, info.col, info.row);
+        }
       });
 
       $('.loading-spinner').remove();
@@ -234,7 +236,18 @@ $(document).ready(function(){
       .keydown(scheduleParseInput);
   });
 
-  var deleteButton = $('#deleteButton');
+  var deleteButton = $('#deleteButton').click(function(e){
+    e.preventDefault();
+    if (confirm('Truly, madly, deeply delete this metric?')) {
+      $.ajax({
+        type: 'DELETE',
+        url: location.pathname
+      })
+      .done(function(res){
+        location.href = res.redirect;
+      });
+    }
+  });
 });
 
 $(document).ready(function(){

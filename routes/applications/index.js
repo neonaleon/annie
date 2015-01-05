@@ -82,6 +82,9 @@ router.get('/:app_id/dashboard', function(req, res){
     .findOne({ _id: req.params.app_id })
     .populate('metrics')
     .exec(function(err, app){
+      app.metrics = app.metrics.filter(function(metric){
+        return metric.meta.status == 'active';
+      });
       app.title = app.title || 'Dashboard';
       res.render('applications/dashboard', app);
     });
@@ -247,6 +250,23 @@ router.post('/:app_id/metric/:metric_id/edit', function(req, res){
         .catch(function(err){
           throw err;
         });
+    })
+    .then(null, function(err){
+      console.error(err);
+    });
+});
+
+router.delete('/:app_id/metric/:metric_id/edit', function(req, res){
+  MetricModel
+    .findOne({ _id: req.params.metric_id })
+    .exec()
+    .then(function(metric){
+      metric.meta.status = 'deleted';
+      metric.save(function(err, metric, n){
+        res.status(200).send({
+          'redirect': '/applications/' + req.params.app_id + '/dashboard'
+        })
+      });
     })
     .then(null, function(err){
       console.error(err);

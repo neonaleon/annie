@@ -13,11 +13,12 @@
       <input type="submit" id="deleteButton" class="btn btn-danger" value="Delete">
     </form>
   </div>
-   <div class="col-md-6">
-    <div class="panel">
-      <div class="panel-body">
-        {{{format-markdown expressionHelp}}}
-      </div>
-    </div>
+  <div class="col-md-6">
+    <h1>Event Viewer</h1>
+    <select name="" id="">
+      {{#each events}}
+      <option value="name"></option>
+      {{/each}}
+    </select>
   </div>
 </div>

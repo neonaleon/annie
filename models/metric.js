@@ -12,6 +12,7 @@ var MetricSchema = mongoose.Schema({
   meta: {
     app_id: { type: mongoose.Schema.Types.ObjectId, required: true },
     createdAt: { type: Date, default: new Date() },
+    status: { type: String, default: 'active' } // or 'deleted'
   },
   result: {
     data: mongoose.Schema.Types.Mixed,
