@@ -3,7 +3,7 @@
     <h1>Add New Metric</h1>
     <form method="POST" role="form">
       <div class="form-group">
-        <input class="form-control floating-label" name="name" type="text" placeholder="Name">
+        <input class="form-control floating-label" name="name" type="text" placeholder="Name" required>
       </div>
       <div id="expression-form-group" class="form-group">
         <textarea id="expression-input" class="form-control floating-label" name="expression" placeholder="Expression" rows="10"></textarea>
@@ -13,10 +13,11 @@
     </form>
   </div>
    <div class="col-md-6">
-    <div class="panel">
-      <div class="panel-body">
-        {{{format-markdown expressionHelp}}}
-      </div>
-    </div>
+    <h1>Event Viewer</h1>
+    <select name="" id="">
+      {{#each events}}
+      <option value="name"></option>
+      {{/each}}
+    </select>
   </div>
 </div>

@@ -10,14 +10,14 @@ var MetricSchema = mongoose.Schema({
   name: String,
   expression: { type: String, trim: true },
   meta: {
-    app_id: mongoose.Schema.Types.ObjectId,
+    app_id: { type: mongoose.Schema.Types.ObjectId, required: true },
     createdAt: { type: Date, default: new Date() },
   },
   result: {
     data: mongoose.Schema.Types.Mixed,
     options: {
-      type: { type: String },
-      subtype: String,
+      type: { type: String }, // type of visualization
+      subtype: String, // subtype of chosen visualization
       labels: [ String ], // for table type, maybe graph as well
       format: String // for value type
     },
@@ -43,6 +43,9 @@ MetricSchema.methods.updateResult = function(){
     if (exec.append){
       pipeline = pipeline.concat(exec.append);
     }
+
+    console.log(pipeline);
+
     // run aggregate query with pipeline
     EventModel
       .aggregate(pipeline)
@@ -51,7 +54,8 @@ MetricSchema.methods.updateResult = function(){
         // transform query result with execution options
         metric.set('result', {
           data: transform(docs, exec.options),
-          options: exec.options
+          options: exec.options,
+          lastUpdated: new Date()
         }, mongoose.Schema.Types.Mixed);
         // save query result
         resolve(metric);

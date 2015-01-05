@@ -1,8 +1,8 @@
 var nconf = require('nconf');
 
 nconf
-  .argv()
-  .env();
+  .argv() // read command line args first
+  .env(); // then env
 
 var NODE_ENV = nconf.get('NODE_ENV');
 

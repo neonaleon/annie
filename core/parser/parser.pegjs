@@ -99,13 +99,16 @@ Primary =
     return query;
   }
 
-Event =
- 'event(' _
+// TODO: Events not tested yet
+// Events =
+//  'event(' _ event:String rest:(',' _ String)* _ ')' {
+//     return [event].concat(rest.map(function(d){ return d[1]; }));
+//  }
 
 // Pipeline steps
 
 PipelineStep =
-  step:(Where / From / To / Group / GroupBy / Sort / Limit) { return step; }
+  step:(Where / From / To / Group / Project / Sort / Limit) { return step; }
 
 Where =
   'where(' _ obj:ObjectLiteral _ ')' { return [ { $match: obj } ]; }
@@ -117,43 +120,50 @@ To =
   'to(' _ ts:Timestamp _ ')' { return [ { $match: { timestamp: { $lte: ts } } } ]; }
 
 Group =
-  'group(' _ obj:ObjectLiteral _ ')' { return [
-      { $group: { _id: obj.label, value: obj.value } },
-      { $project: { label: '$_id', value: '$value'} }
+  'group(' _ obj:ObjectLiteral _ ')' {
+    // return [
+    //   { $group: { _id: obj.label, value: obj.value } },
+    //   { $project: { label: '$_id', value: '$value'} }
+    // ];
+    return [
+      { $group: obj }
     ];
   }
 
 // TODO: improve syntax for date grouping
-GroupBy =
-  'groupBy(' _ obj:ObjectLiteral _ ')' {
-    var timeGroup = {};
-    if (obj.year === 1) {
-      timeGroup.year = { $year: '$timestamp' };
-    }
-    if (obj.month === 1) {
-      timeGroup.month = { $month: '$timestamp' };
-    }
-    if (obj.day === 1) {
-      timeGroup.day = { $dayOfMonth: '$timestamp' };
-    }
-    if (obj.week === 1) {
-      timeGroup.week = { $week: '$timestamp' };
-    }
-    if (obj.hour === 1) {
-      timeGroup.hour = { $hour: '$timestamp' };
-    }
-    // reshape by time
-    var project = { $project: {
-        timeGroup: timeGroup,
-        // timestamp: 1, timestamp is converted to timegroup, so no need to keep
-        data: 1
-      }
-    };
-    var group = { $group: { _id: '$timeGroup', value: obj.value } };
-    var sort = { $sort: { '_id': 1 } }; // default to ascending time
-    var relabel = { $project: { label: '$_id', value: '$value' } };
-    return [ project, group, sort, relabel ];
-  }
+// GroupBy =
+//   'groupBy(' _ obj:ObjectLiteral _ ')' {
+//     var timeGroup = {};
+//     if (obj.year === 1) {
+//       timeGroup.year = { $year: '$timestamp' };
+//     }
+//     if (obj.month === 1) {
+//       timeGroup.month = { $month: '$timestamp' };
+//     }
+//     if (obj.day === 1) {
+//       timeGroup.day = { $dayOfMonth: '$timestamp' };
+//     }
+//     if (obj.week === 1) {
+//       timeGroup.week = { $week: '$timestamp' };
+//     }
+//     if (obj.hour === 1) {
+//       timeGroup.hour = { $hour: '$timestamp' };
+//     }
+//     // reshape by time
+//     var project = { $project: {
+//         timeGroup: timeGroup,
+//         // timestamp: 1, timestamp is converted to timegroup, so no need to keep
+//         data: 1
+//       }
+//     };
+//     var group = { $group: { _id: '$timeGroup', value: obj.value } };
+//     var sort = { $sort: { '_id': 1 } }; // default to ascending time
+//     var relabel = { $project: { label: '$_id', value: '$value' } };
+//     return [ project, group, sort, relabel ];
+//   }
+
+Project =
+  'project(' _ obj:ObjectLiteral _ ')' { return [ { $project: obj } ]; }
 
 Sort =
   'sort(' _ obj:ObjectLiteral _ ')' { return [ { $sort: obj } ]; }
@@ -215,9 +225,9 @@ Tabulate =
   }
 
 Chart =
-  'chart(' _ type:ChartType _ ')' {
+  'chart(' _ type:ChartType _ ',' _ xaxis:String _ ',' _ yaxis:String _ ')' {
     return {
-      append: null,
+      append: [ { $project: { _id: -1, label: '$' + xaxis, value: '$' + yaxis } } ], // transform.js needs formatted data
       options: {
         type: 'chart',
         subtype: type,

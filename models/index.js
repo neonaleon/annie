@@ -5,7 +5,7 @@ var host = nconf.get('database:host');
 var port = nconf.get('database:port');
 var database = nconf.get('database:name');
 mongoose.connect('mongodb://'+host+':'+port+'/'+database);
-
+mongoose.set('debug', true);
 var db = mongoose.connection;
 
 db.on('error', function(err){

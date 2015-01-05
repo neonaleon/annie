@@ -2975,7 +2975,11 @@ var RSVP = require('rsvp');
 var annie = {
   options: {
     apiKey: '',
-    apiUrl: 'http://kts-leonho/annie/api'
+    /**
+     * set apiUrl to where you are mounting Annie
+     * e.g. apiUrl: 'http://kts-leonho/annie/api'
+     */
+    apiUrl: 'http://localhost:8000/api'
   },
 
   init: function(){

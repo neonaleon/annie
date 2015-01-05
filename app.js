@@ -63,8 +63,9 @@ app.use(function(req, res, next){
 	res.locals.url = req.url;
 
 	// set to the correct baseUrl when running behind nginx
-	// res.locals.baseUrl = '/';
-	res.locals.baseUrl = '/annie/';
+	// e.g. res.locals.baseUrl = '/annie/';
+
+	res.locals.baseUrl = '/';
 
 	next();
 });
@@ -72,6 +73,8 @@ app.use(function(req, res, next){
 // unprotected routes
 app.use('/', require('./routes/base'));
 app.use('/developer', require('./routes/developer'));
+app.use('/guide', require('./routes/guide'));
+
 app.use('/api', require('./routes/api'));
 
 // protected routes

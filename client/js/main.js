@@ -129,7 +129,7 @@ $(document).ready(function(){
         gridster.deserialize(res);
         initializeDashboardItems();
         drawCharts();
-      }, 1000);
+      }, 0);
     });
 
     Chart.defaults.global.maintainAspectRatio = false;
@@ -233,6 +233,8 @@ $(document).ready(function(){
       .keyup(scheduleParseInput)
       .keydown(scheduleParseInput);
   });
+
+  var deleteButton = $('#deleteButton');
 });
 
 $(document).ready(function(){

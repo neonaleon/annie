@@ -30,12 +30,14 @@ var lineChartTransform = function(input, options){
     data: []
   };
 
+  console.log("test", input);
+
   input.forEach(function(datum){
-    if (typeof datum.label === 'object'){
-      var tg = datum.label; // timeGroup, see parser.pegjs
-      // use the finest part of the timeGroup as the label
-      datum.label = tg.hour || tg.day || tg.week || tg.month || tg.year;
-    }
+    // if (typeof datum.label === 'object'){
+    //   var tg = datum.label; // timeGroup, see parser.pegjs
+    //   // use the finest part of the timeGroup as the label
+    //   datum.label = tg.hour || tg.day || tg.week || tg.month || tg.year;
+    // }
     output.labels.push(datum.label);
     output.data.push(datum.value);
   });
@@ -77,7 +79,7 @@ var transform = function(input, options){
           case 'line':
             return lineChartTransform;
           case 'bar':
-            return lineChartTransform;
+            return lineChartTransform; // bar uses same data format as lineChart, but this case here allows for change
           case 'pie':
             return pieChartTransform;
         }

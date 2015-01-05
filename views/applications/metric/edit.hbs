@@ -3,13 +3,14 @@
     <h1>Edit Metric</h1>
     <form method="POST" role="form">
       <div class="form-group">
-        <input class="form-control floating-label" name="name" type="text" placeholder="Name" value={{name}}></input>
+        <input class="form-control floating-label" name="name" type="text" placeholder="Name" value="{{name}}" required></input>
       </div>
       <div id="expression-form-group" class="form-group">
         <textarea id="expression-input" class="form-control floating-label" name="expression" placeholder="Expression" rows="10">{{expression}}</textarea>
         <span id="expression-feedback" class="help-block"></span>
       </div>
       <input id="submitButton" type="submit" class="btn btn-primary" value="Save">
+      <input type="submit" id="deleteButton" class="btn btn-danger" value="Delete">
     </form>
   </div>
    <div class="col-md-6">

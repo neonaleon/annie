@@ -122,9 +122,12 @@ router.post('/:app_id/metric/add', function(req, res){
     query = parse(req.body.expression);
   } catch(err) {
     // parse error
+    throw err;
     console.error(err);
     return ;
   }
+
+  console.log(req.body);
 
   var metric = new MetricModel({
     name: req.body.name,
@@ -133,10 +136,12 @@ router.post('/:app_id/metric/add', function(req, res){
       app_id: req.params.app_id
     }
   });
-
+  console.log(query);
   // see MetricModel's schema methods
+  console.log(metric);
   metric.updateResult()
     .then(function(){
+      console.log(metric.save);
       metric.save(function(err, metric, n){
         ApplicationModel
           .findOne({ _id: req.params.app_id })
@@ -218,8 +223,14 @@ router.post('/:app_id/metric/:metric_id/edit', function(req, res){
   } catch(err) {
     // parse error
     console.error(err);
-    return ;
+    throw new Error('Error parsing metric expression.');
+    return;
   }
+
+  if(validator.isNull(req.body.name)) {
+    throw new Error('No metric name given.');
+    return;
+  };
 
   MetricModel
     .findOne({ _id: req.params.metric_id })

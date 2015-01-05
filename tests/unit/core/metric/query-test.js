@@ -31,6 +31,7 @@ describe('Query', function(){
       for (var j = 0; j < num; ++j){
         docs.push({
           event: event,
+          // create data from 3 different weeks
           timestamp: reltime.parse(new Date(), '-' + i * 7 + 'd'),
           data: {
             price: price
@@ -74,10 +75,10 @@ describe('Query', function(){
       });
   });
 
-  it('event("bought gacha").group({ label: "$data.price", value: { $sum: 1 } }).sort({ value: -1 }).chart("line")', function(done){
+  it('event("bought gacha").group({ _id: "$data.price", value: { $sum: 1 } }).project({ label: "$_id", value: "$value" }).sort({ value: -1 }).chart("line", "label", "value")', function(done){
     var metric = new MetricModel;
     metric.meta.app_id = TEST_API_KEY;
-    metric.expression = 'event("bought gacha").group({ label: "$data.price", value: { $sum: 1 } }).sort({ value: -1 }).chart("line")';
+    metric.expression = 'event("bought gacha").group({ _id: "$data.price", value: { $sum: 1 } }).project({ label: "$_id", value: "$value" }).sort({ value: -1 }).chart("line", "label", "value")';
     metric.updateResult()
       .then(function(metric){
         expect(metric.result.data).to.deep.equal({
@@ -91,19 +92,33 @@ describe('Query', function(){
       });
   });
 
-  it('event("bought gacha").groupBy({ year: 1, month: 1, week: 1, value: { $sum: "$data.price" } }).count()', function(done){
-    var metric = new MetricModel;
-    metric.meta.app_id = TEST_API_KEY;
-    metric.expression = 'event("bought gacha").groupBy({ year: 1, month: 1, value: { $sum: "$data.price" } }).count()';
-    metric.updateResult()
-      .then(function(metric){
-        expect(metric.result.data).to.have.length(3);
-        done();
-      })
-      .catch(function(err){
-        done(err);
-      });
-  });
+  // it('event("bought gacha").groupBy({ year: 1, month: 1, week: 1, value: { $sum: "$data.price" } }).count())', function(done){
+  //   var metric = new MetricModel;
+  //   metric.meta.app_id = TEST_API_KEY;
+  //   metric.expression = 'event("bought gacha").groupBy({ year: 1, month: 1, week: 1, value: { $sum: "$data.price" } }).count()';
+  //   metric.updateResult()
+  //     .then(function(metric){
+  //       expect(metric.result.data).to.equal(3);
+  //       done();
+  //     })
+  //     .catch(function(err){
+  //       done(err);
+  //     });
+  // });
+
+  // it('event("bought gacha").groupBy({ year: 1, month: 1, week: 1, value: { $sum: "$data.price" } }).tabulate("day", "sales")', function(done){
+  //   var metric = new MetricModel;
+  //   metric.meta.app_id = TEST_API_KEY;
+  //   metric.expression = 'event("bought gacha").groupBy({ year: 1, month: 1, week: 1, value: { $sum: "$data.price" } }).tabulate("day", "sales")';
+  //   metric.updateResult()
+  //     .then(function(metric){
+  //       console.log(metric);
+  //       done();
+  //     })
+  //     .catch(function(err){
+  //       done(err);
+  //     });
+  // });
 
   after(function(done){
     EventModel.remove({}, done);
