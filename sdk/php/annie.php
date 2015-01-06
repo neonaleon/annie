@@ -2,14 +2,14 @@
 
 class Annie {
 
-  // private static $url = 'http://kts-leonho/annie/api';
-  private static $url = 'http://10.25.11.45:8000/api';
+  private static $url = 'http://203.116.39.179/leonho/annie/api';
   private static $apiKey = '';
   private static $init = false;
 
-  public static function init($apiKey){
+  public static function init($apiKey, $options = array()){
     self::$apiKey = $apiKey;
     self::$init = true;
+    self::$proxy = isset($options['proxy']) ? $options['proxy'] : NULL;
   }
 
   public static function track($event, $data = array()){
@@ -31,6 +31,7 @@ class Annie {
       'Content-Length: ' . strlen($outbound),
       'X-API-KEY: ' . self::$apiKey
     ));
+    curl_setopt($ch, CURLOPT_PROXY, self::$proxy);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $outbound);
     $response = curl_exec($ch);

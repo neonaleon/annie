@@ -8,7 +8,7 @@ var annie = {
      * set apiUrl to where you are mounting Annie
      * e.g. apiUrl: 'http://kts-leonho/annie/api'
      */
-    apiUrl: 'http://10.25.11.45:8000/api'
+    apiUrl: 'http://203.116.39.179/leonho/annie/api'
   },
 
   init: function(){

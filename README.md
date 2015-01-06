@@ -101,8 +101,13 @@ When done, use `grunt build`
 ## Roadmap
 
 Easier config and setup
+
 Cleaner code
+
 Autogenerate SDKs (especially host path)
+
 Live dashboard
+
 More data visualization types
+
 Metric expression debugger

@@ -333,7 +333,7 @@ function getEvent(name){
       .exec()
       .then(function(event){
         resolve({
-          name: name,
+          event: name,
           timestamp: event.timestamp,
           data: event.data
         });
