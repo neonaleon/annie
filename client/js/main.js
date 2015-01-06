@@ -213,8 +213,6 @@ $(document).ready(function(){
   }
 });
 
-
-
 // METRIC
 $(document).ready(function(){
   var timer = null;
@@ -257,6 +255,23 @@ $(document).ready(function(){
         location.href = res.redirect;
       });
     }
+  });
+
+  $(window).scroll(function(event){
+    // keep the form on top
+    $('#metric-form').css('margin-top', $(this).scrollTop());
+  });
+
+  $('#event-filter').keyup(function(e){
+    var search = $(this).val();
+    $('#event-list div')
+      .each(function(){
+        if (this.id.indexOf(search) == -1) {
+          $(this).hide();
+        } else {
+          $(this).show();
+        }
+      });
   });
 });
 

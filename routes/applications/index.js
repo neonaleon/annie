@@ -4,6 +4,7 @@ var crypto = require('crypto');
 var fs = require('fs');
 var path = require('path');
 var validator = require('validator');
+var RSVP = require('rsvp');
 
 var models = require('../../models');
 var UserModel = models.UserModel;
@@ -111,12 +112,18 @@ router.get('/:app_id/dashboard/layout', function(req, res){
 
 // METRICS
 router.get('/:app_id/metric/add', function(req, res){
-  fs.readFile(path.join(__dirname, '../../views/applications/metric/help.md'), { encoding: 'utf8' }, function(err, data){
-    res.render('applications/metric/add', {
-      title: 'Add Metric',
-      expressionHelp: data
+  getEventList(req.params.app_id)
+    .then(function(events){
+      res.render('applications/metric/add', {
+        title: 'Add Metric',
+        events: events
+      });
+    })
+    .catch(function(err){
+      console.error(err);
+      throw err;
+      return;
     });
-  });
 });
 
 router.post('/:app_id/metric/add', function(req, res){
@@ -168,6 +175,18 @@ router.post('/:app_id/metric/add', function(req, res){
     });
 });
 
+// metric viewer
+router.get('/:app_id/metric/view', function(req, res){
+  getEventList(req.params.app_id)
+    .then(function(events){
+      res.status(200).send(events);
+    })
+    .catch(function(err){
+      throw err;
+      return;
+    });
+});
+
 router.get('/:app_id/metric/:metric_id', function(req, res){
   MetricModel
     .findOne({ _id: req.params.metric_id })
@@ -210,12 +229,25 @@ router.get('/:app_id/metric/:metric_id/edit', function(req, res){
     .findOne({ _id: req.params.metric_id })
     .exec()
     .then(function(metric){
-      metric.title = 'Edit Metric';
-      metric.expressionHelp = fs.readFileSync(path.join(__dirname, '../../views/applications/metric/help.md'), { encoding: 'utf-8' })
-      res.render('applications/metric/edit', metric);
+      getEventList(req.params.app_id)
+        .then(function(events){
+          res.render('applications/metric/edit', {
+            title: 'Edit Metric',
+            name: metric.name,
+            expression: metric.expression,
+            events: events
+          });
+        })
+        .catch(function(err){
+          console.error(err);
+          throw err;
+          return;
+        });
     })
     .then(null, function(err){
-      console.log(err);
+      console.error(err);
+      throw err;
+      return;
     });
 });
 
@@ -272,5 +304,44 @@ router.delete('/:app_id/metric/:metric_id/edit', function(req, res){
       console.error(err);
     });
 });
+
+function getEventList(app_id){
+  return new RSVP.Promise(function(resolve, reject){
+    EventModel.find({
+      'meta.app_id': app_id
+    })
+    .distinct('event')
+    .exec()
+    .then(function(events){
+      var promises = events.map(function(e){
+        return getEvent(e);
+      });
+      RSVP.all(promises).then(function(events){
+        resolve(events);
+      })
+    })
+    .then(null, function(err){
+      reject(err);
+    });
+  });
+}
+
+function getEvent(name){
+  return new RSVP.Promise(function(resolve, reject){
+    EventModel
+      .findOne({ event: name })
+      .exec()
+      .then(function(event){
+        resolve({
+          name: name,
+          timestamp: event.timestamp,
+          dataKeys: Object.keys(event.data)
+        });
+      })
+      .then(null, function(err){
+        reject(err);
+      });
+  });
+}
 
 module.exports = router;
