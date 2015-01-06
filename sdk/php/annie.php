@@ -3,7 +3,7 @@
 class Annie {
 
   // private static $url = 'http://kts-leonho/annie/api';
-  private static $url = 'http://localhost:8000/api';
+  private static $url = 'http://10.25.11.45:8000/api';
   private static $apiKey = '';
   private static $init = false;
 

@@ -1,5 +1,6 @@
 var express = require('express');
 var passport = require('passport');
+var validator = require('validator');
 
 var UserModel = require('../../models').UserModel;
 
@@ -46,13 +47,34 @@ router.get('/signup', function(req, res){
 router.post('/signup', function(req, res){
   var email = req.body.email;
   var password = req.body.password;
-  UserModel.create({
-    email: email,
-    password: password
+
+  if (!validator.isEmail(email)) {
+    res.redirect('/signup');
+    return;
+  }
+
+  UserModel.findOne({
+    email: email
   })
+  .exec()
   .then(function(user){
-    res.redirect('/login?signedup=1');
+    if (!user) {
+      UserModel.create({
+        email: email,
+        password: password
+      })
+      .then(function(user){
+        res.redirect('/login?signedup=1');
+      });
+    } else {
+      res.redirect('/signup?error=duplicate');
+    }
   })
+  .then(null, function(err){
+    console.log(err);
+    throw err;
+    return;
+  });
 });
 
 module.exports = router;

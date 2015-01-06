@@ -335,7 +335,7 @@ function getEvent(name){
         resolve({
           name: name,
           timestamp: event.timestamp,
-          dataKeys: Object.keys(event.data)
+          data: event.data
         });
       })
       .then(null, function(err){

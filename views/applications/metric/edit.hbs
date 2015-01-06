@@ -21,9 +21,9 @@
     {{#if events}}
     <div id="event-list">
     {{#each events}}
-      <div id="{{event}}">
-  <pre><code class="language-javascript">{
-  event: "{{event}}"
+      <div id="{{name}}">
+<pre><code class="language-javascript">{
+  event: "{{name}}"
 
   timestamp: Date
 
@@ -32,7 +32,7 @@
     {{@key}}: "{{this}}"
     {{/each}}
   }
-  }</code></pre>
+}</code></pre>
       </div>
     {{/each}}
     {{else}}
