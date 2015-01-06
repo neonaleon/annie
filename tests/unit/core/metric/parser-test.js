@@ -146,7 +146,7 @@ describe('Parser', function(){
       { $project: { label: "$_id", value: "$value" } }
     ]);
     expect(res.exec.append).to.deep.equal([
-      { $project: { label: '$label', value: '$value' } }
+      { $project: { _id: -1, label: '$label', value: '$value' } }
     ]);
     expect(res.exec.options).to.deep.equal({
       type: 'chart',
