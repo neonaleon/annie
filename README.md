@@ -106,8 +106,10 @@ Cleaner code
 
 Autogenerate SDKs (especially host path)
 
-Live dashboard
+Live dashboard ( use https://github.com/mozilla/metrics-graphics ? )
 
 More data visualization types
 
 Metric expression debugger
+
+Data backups
