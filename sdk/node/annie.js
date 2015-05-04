@@ -8,7 +8,7 @@ var annie = {
      * set apiUrl to where you are mounting Annie
      * e.g. apiUrl: 'http://kts-leonho/annie/api'
      */
-    apiUrl: 'http://annie-node-1522.herokuapp.com/api'
+    apiUrl: 'https://annie-node-1522.herokuapp.com/api'
   },
 
   init: function(){
