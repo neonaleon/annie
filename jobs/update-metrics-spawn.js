@@ -4,7 +4,8 @@ var mongoose = require('mongoose');
 var RSVP = require('rsvp');
 
 var config = require('../config');
-var MetricModel = require('../models').MetricModel;
+var models = require('../models');
+var MetricModel = models.MetricModel;
 
 var transform = require('../core/metric/transform');
 
