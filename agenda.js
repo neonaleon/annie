@@ -6,7 +6,15 @@ var updateMetrics = require('./jobs/update-metrics');
 
 var agenda = new Agenda();
 
-agenda.database('localhost:27017/annie', 'agenda');
+var nconf = require('nconf');
+if (nconf.get('dbstring')) {
+  agenda.database(nconf.get('dbstring'), 'agenda'); 
+} else {
+  var host = nconf.get('database:host');
+  var port = nconf.get('database:port');
+  var name = nconf.get('database:name');
+  agenda.database( host + ':' + port + '/' + name, 'agenda');
+}
 
 // spawn process version
 
