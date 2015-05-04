@@ -2,7 +2,7 @@
 
 class Annie {
 
-  private static $url = 'http://annie-node-1522.herokuapp.com/api';
+  private static $url = 'https://annie-node-1522.herokuapp.com/api';
   private static $apiKey = '';
   private static $init = false;
 
