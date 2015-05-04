@@ -8,6 +8,9 @@ var NODE_ENV = nconf.get('NODE_ENV');
 
 if (NODE_ENV === 'production'){
   nconf.file('./config/production.json');
+  if (nconf.get('MONGO_URL')) {
+    nconf.set('dbstring', nconf.get('MONGO_URL'));  
+  }
 } else if (NODE_ENV === 'development'){
   nconf.file('./config/development.json');
 } else if (NODE_ENV === 'test'){

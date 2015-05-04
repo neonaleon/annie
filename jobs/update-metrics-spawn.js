@@ -23,17 +23,20 @@ MetricModel
             counter -= 1;
             if (counter === 0){
               console.log('script done');
+              mongoose.disconnect();
               process.exit(0);
             }
           });
         }).catch(function(err){
           console.error(err);
+          mongoose.disconnect();
           process.exit(1);
         });
     });
   })
   .then(null, function(err){
     console.error(err);
+    mongoose.disconnect();
     process.exit(1);
   })
   .end();

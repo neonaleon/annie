@@ -65,7 +65,8 @@ app.use(function(req, res, next){
 	// set to the correct baseUrl when running behind nginx
 	// e.g. res.locals.baseUrl = '/annie/';
 
-	res.locals.baseUrl = '/leonho/annie/';
+//	res.locals.baseUrl = '/leonho/annie/';
+	res.locals.baseUrl = '/';
 
 	next();
 });
